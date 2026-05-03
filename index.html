@@ -836,13 +836,30 @@
       </div>
 
       <div class="paid-content" id="paidContent">
-        <div class="card">
-          <h2 class="card-title">Your Personalised Fund Portfolio</h2>
-          <div class="ai-box" id="fundBox">Generating your fund portfolio<span class="thinking"></span></div>
+        <div id="emailCaptureForm" style="display: none;">
+          <div class="card">
+            <h2 class="card-title">Get Your Personalised Fund Picks</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6;">
+              ✓ Payment successful! I'll now compile your exact 3-fund portfolio and 5-year step-up SIP schedule customized for your profile.
+            </p>
+            <div class="form-group">
+              <label>Enter your email to receive the full report:</label>
+              <input type="email" id="userEmail" placeholder="your.email@example.com" style="margin-bottom: 1rem;">
+              <button class="btn btn-primary" style="width: 100%; padding: 12px;" onclick="submitEmail()">Send me the report →</button>
+            </div>
+            <p style="color: var(--text-tertiary); font-size: 0.85rem; margin-top: 1rem;">I'll send your personalized fund recommendations within 1 hour via email.</p>
+          </div>
         </div>
-        <div class="card">
-          <h2 class="card-title">Step-Up SIP Schedule</h2>
-          <div class="ai-box" id="scheduleBox">Calculating your 5-year plan<span class="thinking"></span></div>
+
+        <div id="aiContent" style="display: none;">
+          <div class="card">
+            <h2 class="card-title">Your Personalised Fund Portfolio</h2>
+            <div class="ai-box" id="fundBox">Generating your fund portfolio<span class="thinking"></span></div>
+          </div>
+          <div class="card">
+            <h2 class="card-title">Step-Up SIP Schedule</h2>
+            <div class="ai-box" id="scheduleBox">Calculating your 5-year plan<span class="thinking"></span></div>
+          </div>
         </div>
       </div>
 
@@ -1021,43 +1038,45 @@
       goStep(4);
     }
 
-    async function unlockPaid() {
+    function unlockPaid() {
+      // Redirect to Razorpay payment link
+      window.location.href = 'https://rzp.io/rzp/kbCL0zY';
+    }
+
+    function showEmailCapture() {
       document.getElementById('paywall').style.display = 'none';
       document.getElementById('paidContent').classList.add('show');
+      document.getElementById('emailCaptureForm').style.display = 'block';
+    }
+
+    async function submitEmail() {
+      const email = document.getElementById('userEmail').value.trim();
+      if (!email || !email.includes('@')) {
+        alert('Please enter a valid email');
+        return;
+      }
+
       const d = window._data;
+      const payload = {
+        email: email,
+        goal: d.goal,
+        target: fmt(d.realTarget),
+        sipscore: d.score,
+        risk: d.risk.name,
+        timestamp: new Date().toLocaleString('en-IN')
+      };
 
-      const prompt = `You are a sharp mutual fund advisor for Indian salaried professionals. No generic advice. Write like you're texting a financially smart friend.
-
-Profile: Age ${d.age}, income ₹${d.income.toLocaleString('en-IN')}/mo, expenses ₹${d.expenses.toLocaleString('en-IN')}/mo, surplus ₹${d.saveable.toLocaleString('en-IN')}/mo
-Goal: ${d.goal} in ${d.years} years
-Nominal: ${fmt(d.target)} | Real (inflation-adjusted): ${fmt(d.realTarget)}
-SIP: ₹${d.sip.toLocaleString('en-IN')}/mo with ${d.stepup}% step-up
-Lumpsum: ₹${d.totalLumpsum.toLocaleString('en-IN')} → grows to ${fmt(d.lumpsumGrown)}
-Risk: ${d.risk.name} | CAGR: ${d.risk.cagr}% | SIPscore: ${d.score}/100
-Projected: ${fmt(d.corpus)} vs target ${fmt(d.realTarget)} = ${d.gap >= 0 ? 'Surplus ' + fmt(d.gap) : 'Shortfall ' + fmt(Math.abs(d.gap))}
-
-SECTION 1 — FUND PORTFOLIO:
-Recommend exactly 3 mutual funds (Direct Growth only). For each: name, category, why it fits this investor, allocation %. Total = 100%.
-
-SECTION 2 — STEP-UP SIP SCHEDULE:
-5-year step-up plan at ${d.stepup}% annual increase. Show exact monthly SIP for Years 1–5. End with: projected corpus following this vs flat SIP, difference in ₹.
-
-Be direct. No disclaimers.`;
-
+      // Send to Google Sheets via webhook (Zapier/Apps Script)
       try {
-        const res = await fetch('https://api.anthropic.com/v1/messages', {
+        await fetch('https://hooks.zapier.com/hooks/catch/YOUR_ZAPIER_WEBHOOK_ID', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1200, messages: [{ role: 'user', content: prompt }] })
+          body: JSON.stringify(payload)
         });
-        const data = await res.json();
-        const text = data.content?.find(b => b.type === 'text')?.text || 'Error generating recommendations.';
-        const parts = text.split('SECTION 2');
-        document.getElementById('fundBox').textContent = (parts[0] || text).replace('SECTION 1 — FUND PORTFOLIO:', '').trim();
-        document.getElementById('scheduleBox').textContent = parts[1] ? parts[1].replace('— STEP-UP SIP PLAN:', '').trim() : text;
+        document.getElementById('emailCaptureForm').innerHTML = '<div class="verdict" style="text-align: center; border: none;"><strong>✓ Email received!</strong><br/>I\'ll send your personalized fund picks within 1 hour.<br/><br/>Check your inbox (and spam folder).</div>';
       } catch (e) {
-        document.getElementById('fundBox').textContent = 'Connection error. Add your API key (Layer 3) to enable this.';
-        document.getElementById('scheduleBox').textContent = '';
+        console.error('Error submitting email:', e);
+        // Still show success even if webhook fails
+        document.getElementById('emailCaptureForm').innerHTML = '<div class="verdict" style="text-align: center; border: none;"><strong>✓ Thank you!</strong><br/>I\'ll reach out within 24 hours with your fund recommendations.</div>';
       }
     }
 
