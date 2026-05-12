@@ -1,628 +1,547 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SIPscore — Your SIP Clarity Score</title>
-  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Space+Mono:wght@400;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; }
-    *::before, *::after { box-sizing: border-box; }
-
-    :root {
-      --primary: #0d3b0d;
-      --primary-light: #2d6e2d;
-      --accent: #d4af37;
-      --accent-dark: #b8941a;
-      --bg-dark: #0f1419;
-      --bg-card: #1a1f28;
-      --bg-input: #242a38;
-      --text-primary: #f5f5f0;
-      --text-secondary: #b0b0a8;
-      --text-tertiary: #6b6b63;
-      --border: rgba(255, 255, 255, 0.08);
-      --border-light: rgba(255, 255, 255, 0.12);
-      --success: #4ade80;
-      --warning: #fbbf24;
-      --danger: #ef4444;
-    }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background: linear-gradient(135deg, var(--bg-dark) 0%, #1a2135 100%);
-      color: var(--text-primary);
-      font-family: 'Merriweather', serif;
-      line-height: 1.6;
-    }
-
-    body {
-      overflow-y: auto;
-      padding: 2rem 1rem;
-    }
-
-    .container {
-      max-width: 720px;
-      margin: 0 auto;
-    }
-
-    /* ─── Header ─── */
-    .header {
-      text-align: center;
-      margin-bottom: 3.5rem;
-      animation: fadeInDown 0.8s ease-out;
-    }
-
-    .brand {
-      font-family: 'Poppins', sans-serif;
-      font-size: 3rem;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      margin-bottom: 0.5rem;
-      background: linear-gradient(135deg, var(--text-primary), var(--accent));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .brand-sub {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.95rem;
-      color: var(--text-secondary);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-    }
-
-    .tagline {
-      font-size: 1.1rem;
-      color: var(--text-secondary);
-      font-weight: 300;
-      letter-spacing: 0.02em;
-    }
-
-    /* ─── Progress Stepper ─── */
-    .stepper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 1.5rem;
-      margin-bottom: 2.5rem;
-      opacity: 0;
-      animation: fadeInUp 0.8s ease-out 0.2s forwards;
-    }
-
-    .step {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .step-circle {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      border: 2px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      font-size: 1.1rem;
-      color: var(--text-secondary);
-      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .step-circle.active {
-      border-color: var(--accent);
-      background: rgba(212, 175, 55, 0.1);
-      color: var(--accent);
-      box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
-    }
-
-    .step-circle.done {
-      background: var(--primary-light);
-      border-color: var(--success);
-      color: var(--success);
-    }
-
-    .step-label {
-      font-size: 0.75rem;
-      color: var(--text-tertiary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      opacity: 0.7;
-    }
-
-    .step-line {
-      flex: 1;
-      height: 2px;
-      background: var(--border);
-      margin: 0 1rem;
-    }
-
-    /* ─── Cards & Sections ─── */
-    .view {
-      display: none;
-      opacity: 0;
-      animation: fadeIn 0.5s ease-out forwards;
-    }
-
-    .view.active {
-      display: block;
-    }
-
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes slideInFromLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
-
-    .card {
-      background: rgba(26, 31, 40, 0.6);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 2rem;
-      margin-bottom: 1.5rem;
-      backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
-    }
-
-    .card:hover {
-      border-color: var(--border-light);
-      background: rgba(26, 31, 40, 0.8);
-    }
-
-    .card-title {
-      font-family: 'Poppins', sans-serif;
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .card-title::before {
-      content: '';
-      width: 4px;
-      height: 24px;
-      background: var(--accent);
-      border-radius: 2px;
-    }
-
-    /* ─── Form Grid ─── */
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
-
-    .form-group label {
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 500;
-      color: var(--text-primary);
-      letter-spacing: 0.01em;
-    }
-
-    .form-group input,
-    .form-group select {
-      padding: 12px 16px;
-      background: var(--bg-input);
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      color: var(--text-primary);
-      font-size: 1rem;
-      font-family: 'Space Mono', monospace;
-      transition: all 0.3s ease;
-    }
-
-    .form-group input::placeholder {
-      color: var(--text-tertiary);
-    }
-
-    .form-group input:focus,
-    .form-group select:focus {
-      outline: none;
-      border-color: var(--accent);
-      background: rgba(212, 175, 55, 0.05);
-      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
-    }
-
-    .form-hint {
-      font-size: 0.85rem;
-      color: var(--text-tertiary);
-      font-weight: 300;
-      margin-top: 0.5rem;
-    }
-
-    /* ─── Chips (Risk Profile) ─── */
-    .chip-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 0.8rem;
-    }
-
-    .chip {
-      padding: 10px 16px;
-      background: var(--bg-input);
-      border: 1.5px solid var(--border);
-      border-radius: 24px;
-      color: var(--text-secondary);
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .chip:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-      transform: translateY(-2px);
-    }
-
-    .chip.active {
-      background: rgba(212, 175, 55, 0.15);
-      border-color: var(--accent);
-      color: var(--accent);
-      box-shadow: 0 8px 16px rgba(212, 175, 55, 0.2);
-    }
-
-    /* ─── Navigation Buttons ─── */
-    .nav-buttons {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    .btn {
-      padding: 12px 28px;
-      border-radius: 10px;
-      border: none;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      letter-spacing: 0.02em;
-    }
-
-    .btn-secondary {
-      background: transparent;
-      border: 1.5px solid var(--border);
-      color: var(--text-primary);
-    }
-
-    .btn-secondary:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary-light), var(--primary));
-      color: var(--accent);
-      border: 1.5px solid var(--accent);
-      box-shadow: 0 8px 24px rgba(212, 175, 55, 0.25);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 32px rgba(212, 175, 55, 0.35);
-    }
-
-    .btn-primary:active {
-      transform: translateY(0);
-    }
-
-    /* ─── Results Screen ─── */
-    .score-display {
-      text-align: center;
-      margin-bottom: 3rem;
-    }
-
-    .score-label {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.85rem;
-      color: var(--text-tertiary);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 1rem;
-    }
-
-    .score-number {
-      font-family: 'Poppins', sans-serif;
-      font-size: 5.5rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--accent), #e8c547);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      line-height: 1;
-      margin-bottom: 1rem;
-      animation: slideInFromLeft 0.8s ease-out;
-    }
-
-    .score-bar {
-      width: 100%;
-      max-width: 300px;
-      height: 8px;
-      background: var(--bg-input);
-      border-radius: 4px;
-      margin: 1.5rem auto;
-      overflow: hidden;
-    }
-
-    .score-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary-light), var(--accent));
-      border-radius: 4px;
-      transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-
-    .score-verdict {
-      font-size: 1.15rem;
-      color: var(--text-secondary);
-      margin-top: 1.5rem;
-      font-weight: 400;
-      letter-spacing: 0.01em;
-    }
-
-    /* ─── Metrics Grid ─── */
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .metric {
-      background: linear-gradient(135deg, rgba(212, 175, 55, 0.05), rgba(13, 59, 13, 0.05));
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.25rem;
-      text-align: center;
-      transition: all 0.3s ease;
-    }
-
-    .metric:hover {
-      border-color: var(--accent);
-      background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(13, 59, 13, 0.08));
-    }
-
-    .metric-label {
-      font-size: 0.8rem;
-      color: var(--text-tertiary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.75rem;
-    }
-
-    .metric-value {
-      font-family: 'Space Mono', monospace;
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: var(--accent);
-      margin-bottom: 0.5rem;
-    }
-
-    .metric-sub {
-      font-size: 0.75rem;
-      color: var(--text-tertiary);
-      font-weight: 300;
-    }
-
-    /* ─── Verdict Box ─── */
-    .verdict {
-      padding: 1.5rem;
-      border-radius: 12px;
-      border-left: 4px solid var(--accent);
-      background: rgba(212, 175, 55, 0.08);
-      color: var(--text-secondary);
-      margin-bottom: 1.5rem;
-      font-size: 0.95rem;
-      line-height: 1.7;
-      letter-spacing: 0.01em;
-    }
-
-    .verdict.warning {
-      border-left-color: var(--warning);
-      background: rgba(251, 191, 36, 0.08);
-    }
-
-    .verdict.danger {
-      border-left-color: var(--danger);
-      background: rgba(239, 68, 68, 0.08);
-    }
-
-    /* ─── Category List ─── */
-    .category-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .category-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-      padding: 1rem 0;
-      border-bottom: 1px solid var(--border);
-      animation: slideInFromLeft 0.5s ease-out;
-    }
-
-    .category-item:last-child {
-      border-bottom: none;
-    }
-
-    .category-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--accent);
-      border-radius: 50%;
-      margin-top: 6px;
-      flex-shrink: 0;
-    }
-
-    .category-text {
-      font-size: 0.95rem;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
-
-    /* ─── Paywall / Gate ─── */
-    .paywall {
-      background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(13, 59, 13, 0.1));
-      border: 2px dashed var(--accent);
-      border-radius: 16px;
-      padding: 2rem;
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-
-    .paywall-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
-
-    .paywall-title {
-      font-family: 'Poppins', sans-serif;
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      margin-bottom: 0.75rem;
-    }
-
-    .paywall-description {
-      font-size: 0.95rem;
-      color: var(--text-secondary);
-      margin-bottom: 1.5rem;
-      line-height: 1.6;
-    }
-
-    .paywall-features {
-      text-align: left;
-      display: inline-block;
-      margin-bottom: 1.5rem;
-    }
-
-    .feature {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      margin-bottom: 0.75rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .feature::before {
-      content: '✓';
-      color: var(--success);
-      font-weight: bold;
-      font-size: 1.1rem;
-    }
-
-    .btn-unlock {
-      background: linear-gradient(135deg, var(--accent), #e8c547);
-      color: var(--bg-dark);
-      padding: 14px 36px;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      box-shadow: 0 12px 32px rgba(212, 175, 55, 0.35);
-      border: none;
-    }
-
-    .btn-unlock:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 16px 40px rgba(212, 175, 55, 0.45);
-    }
-
-    /* ─── Paid Content ─── */
-    .paid-content {
-      display: none;
-    }
-
-    .paid-content.show {
-      display: block;
-      animation: fadeIn 0.5s ease-out;
-    }
-
-    .ai-box {
-      background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(13, 59, 13, 0.05));
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.5rem;
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-      line-height: 1.8;
-      white-space: pre-wrap;
-      font-family: 'Merriweather', serif;
-      margin-bottom: 1.5rem;
-    }
-
-    /* ─── Responsive ─── */
-    @media (max-width: 768px) {
-      .metrics-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .stepper {
-        gap: 0.75rem;
-      }
-
-      .step-line {
-        margin: 0 0.5rem;
-      }
-
-      .brand {
-        font-size: 2rem;
-      }
-
-      .score-number {
-        font-size: 4rem;
-      }
-
-      .card {
-        padding: 1.5rem;
-      }
-
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* ─── Animations ─── */
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    .thinking::after {
-      content: '.';
-      animation: pulse 1.5s infinite;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIPscore — Find out exactly how much SIP you need for your goal</title>
+<meta name="description" content="Free SIP calculator for Indian investors. Find out exactly how much to invest monthly to reach your financial goal, which mutual funds to pick, and whether your existing investments are enough. Built for salaried professionals.">
+<meta name="keywords" content="SIP calculator India, mutual fund calculator, retirement calculator India, SIP goal planner, financial planning India">
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Space+Mono:wght@400;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --primary: #0d3b0d;
+  --primary-light: #2d6e2d;
+  --accent: #d4af37;
+  --bg-dark: #0f1419;
+  --bg-card: #1a1f28;
+  --bg-input: #242a38;
+  --text-primary: #f5f5f0;
+  --text-secondary: #b0b0a8;
+  --text-tertiary: #6b6b63;
+  --border: rgba(255,255,255,0.08);
+  --border-light: rgba(255,255,255,0.12);
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --danger: #ef4444;
+}
+html, body {
+  background: linear-gradient(135deg, var(--bg-dark) 0%, #1a2135 100%);
+  color: var(--text-primary);
+  font-family: 'Merriweather', serif;
+  line-height: 1.6;
+  scroll-behavior: smooth;
+}
+
+/* ─── LANDING SECTION ─── */
+.landing {
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 1.5rem 6rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.landing::before {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(212,175,55,0.08), transparent 70%);
+  pointer-events: none;
+}
+.landing-inner { max-width: 760px; margin: 0 auto; position: relative; z-index: 1; }
+.eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeInUp 0.6s ease-out 0.1s forwards;
+}
+.hero-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeInUp 0.6s ease-out 0.2s forwards;
+}
+.hero-title span {
+  background: linear-gradient(135deg, var(--accent), #e8c547);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  font-weight: 300;
+  max-width: 600px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.6;
+  opacity: 0;
+  animation: fadeInUp 0.6s ease-out 0.3s forwards;
+}
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 16px 36px;
+  background: linear-gradient(135deg, var(--accent), #e8c547);
+  color: var(--bg-dark);
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 12px;
+  text-decoration: none;
+  box-shadow: 0 12px 32px rgba(212,175,55,0.35);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+  opacity: 0;
+  animation: fadeInUp 0.6s ease-out 0.4s forwards;
+}
+.hero-cta:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(212,175,55,0.45); }
+.hero-meta {
+  margin-top: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+  opacity: 0;
+  animation: fadeInUp 0.6s ease-out 0.5s forwards;
+}
+
+/* ─── TRUST STRIP ─── */
+.trust-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  max-width: 760px;
+  margin: 4rem auto 0;
+  padding: 2rem;
+  background: rgba(255,255,255,0.02);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  opacity: 0;
+  animation: fadeInUp 0.6s ease-out 0.6s forwards;
+}
+.trust-item { text-align: center; }
+.trust-num {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+.trust-label { font-size: 0.8rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* ─── HOW IT WORKS ─── */
+.how-section {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+}
+.section-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+.section-sub {
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: 3rem;
+  font-size: 1.05rem;
+}
+.how-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+.how-card {
+  background: rgba(26,31,40,0.6);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.75rem;
+  transition: all 0.3s ease;
+}
+.how-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+.how-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.9rem;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+}
+.how-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.how-desc { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; }
+
+/* ─── TOOL CONTAINER ─── */
+.tool-section {
+  background: rgba(0,0,0,0.2);
+  padding: 4rem 1rem;
+  border-top: 1px solid var(--border);
+}
+.container { max-width: 720px; margin: 0 auto; }
+.tool-header { text-align: center; margin-bottom: 3rem; }
+.tool-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+.tool-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.75rem;
+}
+.tool-sub { color: var(--text-secondary); font-size: 1.05rem; }
+
+/* ─── Stepper ─── */
+.stepper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+.step { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+.step-circle {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600; font-size: 1.1rem;
+  color: var(--text-secondary);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.step-circle.active { border-color: var(--accent); background: rgba(212,175,55,0.1); color: var(--accent); box-shadow: 0 0 20px rgba(212,175,55,0.3); }
+.step-circle.done { background: var(--primary-light); border-color: var(--success); color: var(--success); }
+.step-label { font-size: 0.75rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; }
+.step-line { flex: 1; height: 2px; background: var(--border); margin: 0 1rem; max-width: 40px; }
+
+/* ─── Cards & Forms ─── */
+.view { display: none; }
+.view.active { display: block; animation: fadeIn 0.5s ease-out; }
+.card {
+  background: rgba(26,31,40,0.6);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(10px);
+}
+.card-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.card-title::before { content: ''; width: 4px; height: 24px; background: var(--accent); border-radius: 2px; }
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.form-group { display: flex; flex-direction: column; gap: 0.6rem; }
+.form-group label { font-family: 'Poppins', sans-serif; font-size: 0.95rem; font-weight: 500; }
+.form-group input, .form-group select {
+  padding: 12px 16px;
+  background: var(--bg-input);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-family: 'Space Mono', monospace;
+  transition: all 0.3s ease;
+}
+.form-group input:focus, .form-group select:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: rgba(212,175,55,0.05);
+  box-shadow: 0 0 0 3px rgba(212,175,55,0.1);
+}
+.form-hint { font-size: 0.85rem; color: var(--text-tertiary); font-weight: 300; }
+
+/* ─── Chips ─── */
+.chip-group { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.8rem; }
+.chip {
+  padding: 10px 16px;
+  background: var(--bg-input);
+  border: 1.5px solid var(--border);
+  border-radius: 24px;
+  color: var(--text-secondary);
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.chip:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+.chip.active { background: rgba(212,175,55,0.15); border-color: var(--accent); color: var(--accent); box-shadow: 0 8px 16px rgba(212,175,55,0.2); }
+
+/* ─── Buttons ─── */
+.nav-buttons { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2rem; }
+.btn {
+  padding: 12px 28px;
+  border-radius: 10px;
+  border: none;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-secondary { background: transparent; border: 1.5px solid var(--border); color: var(--text-primary); }
+.btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+  box-shadow: 0 8px 24px rgba(212,175,55,0.25);
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(212,175,55,0.35); }
+
+/* ─── Results ─── */
+.recommendation-hero {
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba(212,175,55,0.1), rgba(13,59,13,0.1));
+  border: 2px solid var(--accent);
+  border-radius: 20px;
+  margin-bottom: 2rem;
+}
+.rec-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+}
+.rec-number {
+  font-family: 'Poppins', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent), #e8c547);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.rec-period {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+.rec-explainer {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.score-mini {
+  display: flex; align-items: center; justify-content: center;
+  gap: 1.5rem; margin-bottom: 2rem;
+}
+.score-circle {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: rgba(212,175,55,0.05);
+}
+.score-circle-num {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem; font-weight: 700;
+  color: var(--accent); line-height: 1;
+}
+.score-circle-label { font-size: 0.65rem; color: var(--text-tertiary); text-transform: uppercase; }
+.score-text { flex: 1; max-width: 350px; }
+.score-text strong { color: var(--text-primary); font-family: 'Poppins', sans-serif; }
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.metric {
+  background: rgba(26,31,40,0.6);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+}
+.metric-label { font-size: 0.75rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.6rem; }
+.metric-value { font-family: 'Space Mono', monospace; font-size: 1.2rem; font-weight: 700; color: var(--accent); margin-bottom: 0.4rem; }
+.metric-sub { font-size: 0.7rem; color: var(--text-tertiary); }
+
+.verdict {
+  padding: 1.5rem;
+  border-radius: 12px;
+  border-left: 4px solid var(--accent);
+  background: rgba(212,175,55,0.08);
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+.verdict.warning { border-left-color: var(--warning); background: rgba(251,191,36,0.08); }
+.verdict.danger { border-left-color: var(--danger); background: rgba(239,68,68,0.08); }
+
+.category-list { display: flex; flex-direction: column; gap: 1rem; }
+.category-item { display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--border); }
+.category-item:last-child { border-bottom: none; }
+.category-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+.category-text { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.5; }
+
+/* ─── Paywall ─── */
+.paywall {
+  background: linear-gradient(135deg, rgba(212,175,55,0.1), rgba(13,59,13,0.1));
+  border: 2px dashed var(--accent);
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.paywall-icon { font-size: 3rem; margin-bottom: 1rem; }
+.paywall-title { font-family: 'Poppins', sans-serif; font-size: 1.3rem; font-weight: 600; margin-bottom: 0.75rem; }
+.paywall-description { font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem; }
+.paywall-price {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-tertiary);
+  margin-bottom: 1rem;
+}
+.paywall-price strong { color: var(--accent); font-size: 1.4rem; }
+.paywall-features { text-align: left; display: inline-block; margin-bottom: 1.5rem; }
+.feature { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.75rem; }
+.feature::before { content: '✓'; color: var(--success); font-weight: bold; font-size: 1.1rem; }
+.btn-unlock {
+  background: linear-gradient(135deg, var(--accent), #e8c547);
+  color: var(--bg-dark);
+  padding: 14px 36px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow: 0 12px 32px rgba(212,175,55,0.35);
+  transition: all 0.3s ease;
+}
+.btn-unlock:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(212,175,55,0.45); }
+
+.paid-content { display: none; }
+.paid-content.show { display: block; animation: fadeIn 0.5s ease-out; }
+
+/* ─── Footer ─── */
+.footer {
+  text-align: center;
+  padding: 3rem 1.5rem 2rem;
+  color: var(--text-tertiary);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+.footer-disclaimer { max-width: 600px; margin: 0 auto 1rem; line-height: 1.6; }
+
+/* ─── Animations ─── */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  .metrics-grid { grid-template-columns: 1fr; }
+  .stepper { gap: 0.5rem; }
+  .step-line { margin: 0 0.3rem; }
+  .card { padding: 1.5rem; }
+  .form-grid { grid-template-columns: 1fr; }
+  .rec-number { font-size: 2.5rem; }
+  .score-mini { flex-direction: column; text-align: center; }
+}
+</style>
 </head>
 <body>
+
+<!-- ═══════════════ LANDING PAGE ═══════════════ -->
+<section class="landing">
+  <div class="landing-inner">
+    <div class="eyebrow">For Indian Salaried Investors</div>
+    <h1 class="hero-title">Find out exactly how much <span>SIP you need</span> to reach your goal.</h1>
+    <p class="hero-sub">
+      Most SIP calculators ask you the wrong question — "what's your SIP?" — when you came to find that answer. SIPscore tells you the exact monthly amount, the right funds, and whether you're on track. Built for salaried professionals earning ₹8–25L.
+    </p>
+    <button class="hero-cta" onclick="document.getElementById('tool').scrollIntoView({behavior:'smooth'})">
+      Calculate my SIPscore →
+    </button>
+    <div class="hero-meta">Free SIP analysis · Takes 2 minutes · No signup needed</div>
+
+    <div class="trust-strip">
+      <div class="trust-item"><div class="trust-num">7</div><div class="trust-label">Smart Factors</div></div>
+      <div class="trust-item"><div class="trust-num">Inflation</div><div class="trust-label">Adjusted Math</div></div>
+      <div class="trust-item"><div class="trust-num">100%</div><div class="trust-label">Personalised</div></div>
+      <div class="trust-item"><div class="trust-num">2 min</div><div class="trust-label">To Get Answer</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ HOW IT WORKS ═══════════════ -->
+<section class="how-section">
+  <h2 class="section-title">How SIPscore Works</h2>
+  <p class="section-sub">Three things that make this different from every other SIP calculator.</p>
+  <div class="how-grid">
+    <div class="how-card">
+      <div class="how-num">01 / WE TELL YOU</div>
+      <div class="how-title">The exact SIP amount</div>
+      <div class="how-desc">You don't tell us your SIP. We calculate the precise monthly amount you need based on your income, goal, and risk profile.</div>
+    </div>
+    <div class="how-card">
+      <div class="how-num">02 / REAL MATH</div>
+      <div class="how-title">Inflation-adjusted</div>
+      <div class="how-desc">Your ₹1 Cr goal today is worth ₹3.2 Cr in 20 years. We factor inflation, step-ups, and lumpsum compounding — what other tools ignore.</div>
+    </div>
+    <div class="how-card">
+      <div class="how-num">03 / FUND PICKS</div>
+      <div class="how-title">Specific recommendations</div>
+      <div class="how-desc">Get the exact 3 mutual funds matched to your risk profile and goal, with allocation percentages — not generic categories.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ TOOL ═══════════════ -->
+<section class="tool-section" id="tool">
   <div class="container">
-    <!-- Header -->
-    <div class="header">
-      <div class="brand-sub">Financial Clarity</div>
-      <div class="brand">SIPscore</div>
-      <div class="tagline">Know exactly which funds to pick for your goal.</div>
+    <div class="tool-header">
+      <div class="tool-eyebrow">Start Here</div>
+      <h2 class="tool-title">Your SIPscore Analysis</h2>
+      <p class="tool-sub">Answer 3 short steps. Get your personalized result.</p>
     </div>
 
     <!-- Stepper -->
@@ -631,39 +550,38 @@
       <div class="step-line"></div>
       <div class="step"><div class="step-circle" id="sc2">2</div><div class="step-label">Goal</div></div>
       <div class="step-line"></div>
-      <div class="step"><div class="step-circle" id="sc3">3</div><div class="step-label">Invest</div></div>
+      <div class="step"><div class="step-circle" id="sc3">3</div><div class="step-label">Risk</div></div>
       <div class="step-line"></div>
-      <div class="step"><div class="step-circle" id="sc4">4</div><div class="step-label">Score</div></div>
+      <div class="step"><div class="step-circle" id="sc4">4</div><div class="step-label">Result</div></div>
     </div>
 
-    <!-- Step 1: Profile -->
+    <!-- STEP 1: Profile -->
     <div class="view active" id="view1">
       <div class="card">
         <h2 class="card-title">About You</h2>
         <div class="form-grid">
           <div class="form-group">
             <label>Monthly take-home (₹)</label>
-            <input type="number" id="income" value="75000" placeholder="Your salary after taxes">
-            <div class="form-hint">Actual money in your account each month</div>
+            <input type="number" id="income" value="75000">
+            <div class="form-hint">Salary after taxes</div>
           </div>
           <div class="form-group">
             <label>Monthly expenses (₹)</label>
-            <input type="number" id="expenses" value="40000" placeholder="Fixed + variable">
-            <div class="form-hint">Rent, food, utilities, everything</div>
+            <input type="number" id="expenses" value="40000">
+            <div class="form-hint">Rent, food, everything fixed</div>
           </div>
         </div>
         <div class="form-grid">
           <div class="form-group">
-            <label>Age</label>
+            <label>Your age</label>
             <input type="number" id="age" value="27" min="22" max="55">
           </div>
           <div class="form-group">
-            <label>Dependants</label>
-            <select id="deps">
-              <option value="0">None</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3+</option>
+            <label>Income stability</label>
+            <select id="stability">
+              <option value="stable">Very stable (govt / MNC)</option>
+              <option value="moderate">Moderate (private sector)</option>
+              <option value="variable">Variable (freelance / startup)</option>
             </select>
           </div>
         </div>
@@ -674,14 +592,12 @@
               <option value="new">New regime</option>
               <option value="old">Old regime (80C/NPS)</option>
             </select>
+            <div class="form-hint">Affects ELSS recommendation</div>
           </div>
           <div class="form-group">
-            <label>Income stability</label>
-            <select id="stability">
-              <option value="stable">Very stable (govt/MNC)</option>
-              <option value="moderate">Moderate (private)</option>
-              <option value="variable">Variable (freelance)</option>
-            </select>
+            <label>Existing MF investments (₹)</label>
+            <input type="number" id="lumpsum" value="100000">
+            <div class="form-hint">Current mutual fund balance (0 if none)</div>
           </div>
         </div>
       </div>
@@ -691,26 +607,25 @@
       </div>
     </div>
 
-    <!-- Step 2: Goal -->
+    <!-- STEP 2: Goal -->
     <div class="view" id="view2">
       <div class="card">
-        <h2 class="card-title">Your Financial Goal</h2>
+        <h2 class="card-title">What Are You Investing For?</h2>
         <div class="form-grid">
           <div class="form-group">
-            <label>What's your goal?</label>
+            <label>Your financial goal</label>
             <select id="goal">
               <option>Retirement corpus</option>
               <option>Child's education</option>
               <option>House down payment</option>
               <option>FIRE — financial independence</option>
               <option>Wealth creation</option>
-              <option>Emergency fund</option>
             </select>
           </div>
           <div class="form-group">
-            <label>Target amount (₹)</label>
-            <input type="number" id="target" value="10000000" placeholder="1 Cr = 10000000">
-            <div class="form-hint">In today's rupees</div>
+            <label>Target amount today (₹)</label>
+            <input type="number" id="target" value="10000000">
+            <div class="form-hint">In today's rupees (we'll adjust for inflation)</div>
           </div>
         </div>
         <div class="form-grid">
@@ -721,49 +636,25 @@
           <div class="form-group">
             <label>Inflation assumption (%)</label>
             <input type="number" id="inflation" value="6" min="3" max="10">
-            <div class="form-hint">For real target calculation</div>
+            <div class="form-hint">India avg: 6%</div>
           </div>
         </div>
       </div>
       <div class="nav-buttons">
         <button class="btn btn-secondary" onclick="goStep(1)">← Back</button>
-        <button class="btn btn-primary" onclick="goStep(3)">Next: Investments →</button>
+        <button class="btn btn-primary" onclick="goStep(3)">Next: Your Risk →</button>
       </div>
     </div>
 
-    <!-- Step 3: Investments -->
+    <!-- STEP 3: Risk -->
     <div class="view" id="view3">
       <div class="card">
-        <h2 class="card-title">Your Investment Plan</h2>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Monthly SIP (₹)</label>
-            <input type="number" id="sip" value="15000" placeholder="Your monthly amount">
-          </div>
-          <div class="form-group">
-            <label>Annual step-up (%)</label>
-            <input type="number" id="stepup" value="10" min="0" max="30">
-            <div class="form-hint">Increase with salary hikes</div>
-          </div>
-        </div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Lumpsum in MFs (₹)</label>
-            <input type="number" id="lumpsum" value="100000" placeholder="Already invested">
-            <div class="form-hint">Current mutual fund balance</div>
-          </div>
-          <div class="form-group">
-            <label>Extra lumpsum now (₹)</label>
-            <input type="number" id="lumpsumExtra" value="0" placeholder="To invest immediately">
-          </div>
-        </div>
-        <div id="lsCallout" style="display: none; padding: 1rem; background: rgba(212, 175, 55, 0.08); border-left: 4px solid var(--accent); border-radius: 8px; margin: 1rem 0; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;"></div>
-      </div>
-
-      <div class="card">
-        <h2 class="card-title">Risk Profile</h2>
+        <h2 class="card-title">Understanding Your Risk Profile</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
+          We use these questions to suggest the right CAGR and fund mix — not just label you.
+        </p>
         <div style="margin-bottom: 2rem;">
-          <label style="font-family: 'Poppins', sans-serif; font-weight: 500; color: var(--text-primary); display: block; margin-bottom: 1rem;">Your reaction to a 25% portfolio drop:</label>
+          <label style="font-family: 'Poppins', sans-serif; font-weight: 500; display: block; margin-bottom: 1rem;">If your portfolio drops 25% in one year, you would:</label>
           <div class="chip-group" id="rc">
             <span class="chip active" onclick="selectChip(this, 'rc')">Stop SIP immediately</span>
             <span class="chip" onclick="selectChip(this, 'rc')">Hold but feel anxious</span>
@@ -771,7 +662,7 @@
           </div>
         </div>
         <div>
-          <label style="font-family: 'Poppins', sans-serif; font-weight: 500; color: var(--text-primary); display: block; margin-bottom: 1rem;">Equity MF experience:</label>
+          <label style="font-family: 'Poppins', sans-serif; font-weight: 500; display: block; margin-bottom: 1rem;">Your equity mutual fund experience:</label>
           <div class="chip-group" id="ec">
             <span class="chip active" onclick="selectChip(this, 'ec')">None — I'm new</span>
             <span class="chip" onclick="selectChip(this, 'ec')">Under 2 years</span>
@@ -779,316 +670,319 @@
           </div>
         </div>
       </div>
-
       <div class="nav-buttons">
         <button class="btn btn-secondary" onclick="goStep(2)">← Back</button>
         <button class="btn btn-primary" onclick="calculate()">Calculate My SIPscore →</button>
       </div>
     </div>
 
-    <!-- Step 4: Results -->
+    <!-- STEP 4: Results -->
     <div class="view" id="view4">
-      <div class="score-display">
-        <div class="score-label">Your Financial Clarity Score</div>
-        <div class="score-number" id="scoreNum">—</div>
-        <div class="score-bar">
-          <div class="score-fill" id="scoreFill" style="width: 0%"></div>
-        </div>
-        <div class="score-verdict" id="scoreVerdict">Calculate to see your score</div>
+      <!-- HERO RECOMMENDATION -->
+      <div class="recommendation-hero">
+        <div class="rec-label">Your Recommended SIP</div>
+        <div class="rec-number" id="recSIP">—</div>
+        <div class="rec-period">per month, with 10% annual step-up</div>
+        <p class="rec-explainer" id="recExplainer"></p>
       </div>
 
-      <div class="metrics-grid">
-        <div class="metric">
-          <div class="metric-label">Projected Corpus</div>
-          <div class="metric-value" id="mCorpus">—</div>
-          <div class="metric-sub">SIP + lumpsum combined</div>
+      <!-- SCORE -->
+      <div class="score-mini">
+        <div class="score-circle">
+          <div class="score-circle-num" id="scoreNum">—</div>
+          <div class="score-circle-label">SIPscore</div>
         </div>
+        <div class="score-text" id="scoreText"></div>
+      </div>
+
+      <!-- METRICS -->
+      <div class="metrics-grid">
         <div class="metric">
           <div class="metric-label">Real Target</div>
           <div class="metric-value" id="mTarget">—</div>
           <div class="metric-sub">inflation-adjusted</div>
         </div>
         <div class="metric">
-          <div class="metric-label">Gap / Surplus</div>
-          <div class="metric-value" id="mGap">—</div>
-          <div class="metric-sub">vs your real goal</div>
+          <div class="metric-label">Lumpsum grows to</div>
+          <div class="metric-value" id="mLumpsum">—</div>
+          <div class="metric-sub">existing investments</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Status</div>
+          <div class="metric-value" id="mStatus">—</div>
+          <div class="metric-sub">vs your goal</div>
         </div>
       </div>
 
+      <!-- VERDICT -->
       <div class="verdict" id="verdictBox"></div>
 
+      <!-- FREE CATEGORIES -->
       <div class="card">
-        <h2 class="card-title">Recommended Fund Categories</h2>
+        <h2 class="card-title">Fund Categories For Your Profile</h2>
         <div class="category-list" id="catList"></div>
       </div>
 
+      <!-- PAYWALL -->
       <div class="paywall" id="paywall">
         <div class="paywall-icon">🔒</div>
         <div class="paywall-title">Unlock Specific Fund Picks</div>
-        <div class="paywall-description">Get AI-powered recommendations tailored to your exact profile.</div>
-        <div class="paywall-features">
-          <div class="feature">Specific fund names with reasons</div>
-          <div class="feature">Exact allocation percentages</div>
-          <div class="feature">5-year step-up schedule</div>
-          <div class="feature">Download full PDF report</div>
+        <div class="paywall-description">
+          Get the exact 3 mutual funds tailored to your profile — not generic categories.
         </div>
-        <button class="btn btn-unlock" onclick="unlockPaid()">Unlock Report — ₹99</button>
+        <div class="paywall-price">Just <strong>₹49</strong> · One-time</div>
+        <div class="paywall-features">
+          <div class="feature">Exact fund names with reasons</div>
+          <div class="feature">Allocation percentages (must total 100%)</div>
+          <div class="feature">5-year step-up SIP schedule</div>
+          <div class="feature">ELSS picks (if old tax regime)</div>
+        </div>
+        <button class="btn-unlock" onclick="unlockPaid()">Unlock for ₹49 →</button>
       </div>
 
+      <!-- AFTER PAYMENT -->
       <div class="paid-content" id="paidContent">
-        <div id="emailCaptureForm" style="display: none;">
-          <div class="card">
-            <h2 class="card-title">Get Your Personalised Fund Picks</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6;">
-              ✓ Payment successful! I'll now compile your exact 3-fund portfolio and 5-year step-up SIP schedule customized for your profile.
+        <div class="card">
+          <h2 class="card-title">Get Your Fund Picks</h2>
+          <div id="emailCaptureForm">
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
+              ✓ Payment successful! Your personalized fund portfolio is being prepared.
             </p>
             <div class="form-group">
-              <label>Enter your email to receive the full report:</label>
-              <input type="email" id="userEmail" placeholder="your.email@example.com" style="margin-bottom: 1rem;">
-              <button class="btn btn-primary" style="width: 100%; padding: 12px;" onclick="submitEmail()">Send me the report →</button>
+              <label>Enter your email to receive the report:</label>
+              <input type="email" id="userEmail" placeholder="your.email@example.com">
             </div>
-            <p style="color: var(--text-tertiary); font-size: 0.85rem; margin-top: 1rem;">I'll send your personalized fund recommendations within 1 hour via email.</p>
-          </div>
-        </div>
-
-        <div id="aiContent" style="display: none;">
-          <div class="card">
-            <h2 class="card-title">Your Personalised Fund Portfolio</h2>
-            <div class="ai-box" id="fundBox">Generating your fund portfolio<span class="thinking"></span></div>
-          </div>
-          <div class="card">
-            <h2 class="card-title">Step-Up SIP Schedule</h2>
-            <div class="ai-box" id="scheduleBox">Calculating your 5-year plan<span class="thinking"></span></div>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 1rem;" onclick="submitEmail()">Send me my report →</button>
+            <p style="font-size: 0.8rem; color: var(--text-tertiary); margin-top: 1rem; text-align: center;">Delivered within 1 hour via email.</p>
           </div>
         </div>
       </div>
 
       <div class="nav-buttons">
-        <button class="btn btn-secondary" onclick="goStep(3)">← Back to Inputs</button>
+        <button class="btn btn-secondary" onclick="goStep(3)">← Back</button>
         <button class="btn btn-secondary" onclick="reset()">Start Over</button>
       </div>
     </div>
 
   </div>
+</section>
 
-  <script>
-    let currentStep = 1;
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="footer">
+  <p class="footer-disclaimer">
+    SIPscore is an educational tool. Mutual fund investments are subject to market risks. Past performance is not indicative of future returns. Please consult a SEBI-registered investment advisor for personalized advice. This is not investment advice.
+  </p>
+  <p>© 2026 SIPscore · Built for Indian salaried investors</p>
+</footer>
 
-    function goStep(n) {
-      document.getElementById('view' + currentStep).classList.remove('active');
-      document.getElementById('sc' + currentStep).classList.remove('active');
-      if (n > currentStep) {
-        document.getElementById('sc' + currentStep).classList.add('done');
+<script>
+let currentStep = 1;
+
+function goStep(n) {
+  document.getElementById('view' + currentStep).classList.remove('active');
+  document.getElementById('sc' + currentStep).classList.remove('active');
+  if (n > currentStep) document.getElementById('sc' + currentStep).classList.add('done');
+  currentStep = n;
+  document.getElementById('view' + n).classList.add('active');
+  document.getElementById('sc' + n).classList.add('active');
+  document.getElementById('tool').scrollIntoView({behavior: 'smooth'});
+}
+
+function selectChip(el, group) {
+  document.querySelectorAll('#' + group + ' .chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function fmt(n) {
+  const abs = Math.abs(n);
+  const sign = n < 0 ? '-' : '';
+  if (abs >= 10000000) return sign + '₹' + (abs / 10000000).toFixed(2) + ' Cr';
+  if (abs >= 100000) return sign + '₹' + (abs / 100000).toFixed(1) + ' L';
+  return sign + '₹' + Math.round(abs).toLocaleString('en-IN');
+}
+
+function getRisk() {
+  const rc = document.querySelector('#rc .chip.active').textContent;
+  const ec = document.querySelector('#ec .chip.active').textContent;
+  let pts = 0;
+  if (rc.includes('buy')) pts += 3; else if (rc.includes('anxious')) pts += 2; else pts += 1;
+  if (ec.includes('2+')) pts += 3; else if (ec.includes('Under')) pts += 2; else pts += 1;
+  if (pts <= 3) return { name: 'Conservative', cagr: 10, stepup: 8 };
+  if (pts <= 5) return { name: 'Moderate', cagr: 12, stepup: 10 };
+  return { name: 'Aggressive', cagr: 14, stepup: 12 };
+}
+
+// Calculate required SIP given target, years, lumpsum, CAGR, step-up
+function calculateRequiredSIP(target, years, lumpsum, cagr, stepupPct) {
+  const lumpsumGrown = lumpsum * Math.pow(1 + cagr / 100, years);
+  const remainingTarget = Math.max(0, target - lumpsumGrown);
+  if (remainingTarget === 0) return 0;
+
+  // Binary search for SIP that gives remainingTarget with step-up
+  let low = 100, high = 1000000;
+  const r = cagr / 100 / 12;
+  for (let i = 0; i < 50; i++) {
+    const mid = (low + high) / 2;
+    let corpus = 0, currentSIP = mid;
+    for (let y = 0; y < years; y++) {
+      for (let m = 0; m < 12; m++) {
+        corpus = (corpus + currentSIP) * (1 + r);
       }
-      currentStep = n;
-      document.getElementById('view' + n).classList.add('active');
-      document.getElementById('sc' + n).classList.add('active');
-      window.scrollTo(0, 0);
+      currentSIP *= (1 + stepupPct / 100);
     }
+    if (corpus < remainingTarget) low = mid; else high = mid;
+  }
+  return Math.round(low / 500) * 500; // round to nearest 500
+}
 
-    function selectChip(el, group) {
-      document.querySelectorAll('#' + group + ' .chip').forEach(c => c.classList.remove('active'));
-      el.classList.add('active');
-      updateLumpsumCallout();
-    }
+function calculate() {
+  const income = parseFloat(document.getElementById('income').value) || 75000;
+  const expenses = parseFloat(document.getElementById('expenses').value) || 40000;
+  const age = parseFloat(document.getElementById('age').value) || 27;
+  const target = parseFloat(document.getElementById('target').value) || 10000000;
+  const years = parseFloat(document.getElementById('years').value) || 20;
+  const inflation = parseFloat(document.getElementById('inflation').value) || 6;
+  const lumpsum = parseFloat(document.getElementById('lumpsum').value) || 0;
+  const goal = document.getElementById('goal').value;
+  const stability = document.getElementById('stability').value;
+  const tax = document.getElementById('tax').value;
+  const risk = getRisk();
 
-    function updateLumpsumCallout() {
-      const ls = parseFloat(document.getElementById('lumpsum').value) || 0;
-      const lsE = parseFloat(document.getElementById('lumpsumExtra').value) || 0;
-      const total = ls + lsE;
-      const years = parseFloat(document.getElementById('years').value) || 20;
-      if (total > 0) {
-        const grown = total * Math.pow(1.12, years);
-        document.getElementById('lsCallout').style.display = 'block';
-        document.getElementById('lsCallout').innerHTML = '💡 Your ₹' + fmt(total) + ' lumpsum grows to <strong>' + fmt(grown) + '</strong> in ' + years + ' years at 12% CAGR — before a single SIP rupee is invested.';
-      } else {
-        document.getElementById('lsCallout').style.display = 'none';
-      }
-    }
+  const realTarget = target * Math.pow(1 + inflation / 100, years);
+  const lumpsumGrown = lumpsum * Math.pow(1 + risk.cagr / 100, years);
+  const requiredSIP = calculateRequiredSIP(realTarget, years, lumpsum, risk.cagr, risk.stepup);
+  const saveable = income - expenses;
+  const affordable = requiredSIP <= saveable;
+  const sipRatio = requiredSIP / saveable;
 
-    document.getElementById('lumpsum').addEventListener('input', updateLumpsumCallout);
-    document.getElementById('lumpsumExtra').addEventListener('input', updateLumpsumCallout);
-    document.getElementById('years').addEventListener('input', updateLumpsumCallout);
-    updateLumpsumCallout();
+  // SIPscore calculation
+  let score = 0;
+  if (sipRatio <= 0.3) score += 25;
+  else if (sipRatio <= 0.5) score += 18;
+  else if (sipRatio <= 0.7) score += 10;
+  else if (sipRatio <= 1) score += 5;
+  else score += 0;
 
-    function fmt(n) {
-      const abs = Math.abs(n);
-      const sign = n < 0 ? '-' : '';
-      if (abs >= 10000000) return sign + '₹' + (abs / 10000000).toFixed(2) + ' Cr';
-      if (abs >= 100000) return sign + '₹' + (abs / 100000).toFixed(1) + ' L';
-      return sign + '₹' + Math.round(abs).toLocaleString('en-IN');
-    }
+  if (years >= 20) score += 20;
+  else if (years >= 15) score += 15;
+  else if (years >= 10) score += 10;
+  else score += 5;
 
-    function calcStepupCorpus(sip, stepup, cagr, years) {
-      const r = cagr / 100 / 12;
-      let corpus = 0, currentSIP = sip;
-      for (let y = 0; y < years; y++) {
-        for (let m = 0; m < 12; m++) {
-          corpus = (corpus + currentSIP) * (1 + r);
-        }
-        currentSIP *= (1 + stepup / 100);
-      }
-      return corpus;
-    }
+  if (lumpsum >= income * 12) score += 15;
+  else if (lumpsum >= income * 6) score += 10;
+  else if (lumpsum > 0) score += 5;
 
-    function calcFlatCorpus(sip, cagr, years) {
-      const r = cagr / 100 / 12;
-      const n = years * 12;
-      return sip * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
-    }
+  if (age <= 28) score += 15;
+  else if (age <= 33) score += 10;
+  else if (age <= 40) score += 6;
+  else score += 3;
 
-    function getRisk() {
-      const rc = document.querySelector('#rc .chip.active').textContent;
-      const ec = document.querySelector('#ec .chip.active').textContent;
-      let pts = 0;
-      if (rc.includes('buy')) pts += 3; else if (rc.includes('anxious')) pts += 2; else pts += 1;
-      if (ec.includes('2+')) pts += 3; else if (ec.includes('Under')) pts += 2; else pts += 1;
-      if (pts <= 3) return { name: 'Conservative', cagr: 10 };
-      if (pts <= 5) return { name: 'Moderate', cagr: 12 };
-      return { name: 'Aggressive', cagr: 14 };
-    }
+  if (risk.name === 'Aggressive') score += 10;
+  else if (risk.name === 'Moderate') score += 8;
+  else score += 5;
 
-    function calculate() {
-      const income = parseFloat(document.getElementById('income').value) || 75000;
-      const expenses = parseFloat(document.getElementById('expenses').value) || 40000;
-      const age = parseFloat(document.getElementById('age').value) || 27;
-      const target = parseFloat(document.getElementById('target').value) || 10000000;
-      const years = parseFloat(document.getElementById('years').value) || 20;
-      const inflation = parseFloat(document.getElementById('inflation').value) || 6;
-      const sip = parseFloat(document.getElementById('sip').value) || 15000;
-      const stepup = parseFloat(document.getElementById('stepup').value) || 10;
-      const lumpsum = parseFloat(document.getElementById('lumpsum').value) || 0;
-      const lumpsumExtra = parseFloat(document.getElementById('lumpsumExtra').value) || 0;
-      const totalLumpsum = lumpsum + lumpsumExtra;
-      const goal = document.getElementById('goal').value;
-      const risk = getRisk();
+  if (stability === 'stable') score += 10;
+  else if (stability === 'moderate') score += 7;
+  else score += 4;
 
-      const realTarget = target * Math.pow(1 + inflation / 100, years);
-      const lumpsumGrown = totalLumpsum * Math.pow(1 + risk.cagr / 100, years);
-      const sipCorpusStepup = calcStepupCorpus(sip, stepup, risk.cagr, years);
-      const corpus = sipCorpusStepup + lumpsumGrown;
-      const gap = corpus - realTarget;
-      const sipCorpusFlat = calcFlatCorpus(sip, risk.cagr, years);
-      const stepupBenefit = sipCorpusStepup - sipCorpusFlat;
+  if (tax === 'old' && years >= 5) score += 5; // ELSS bonus
 
-      let score = 0;
-      const saveable = income - expenses;
-      const sipRatio = sip / saveable;
-      if (sipRatio >= 0.3) score += 20;
-      else if (sipRatio >= 0.2) score += 14;
-      else if (sipRatio >= 0.1) score += 8;
-      else score += 3;
-      const projRatio = corpus / realTarget;
-      if (projRatio >= 1.2) score += 25;
-      else if (projRatio >= 1.0) score += 20;
-      else if (projRatio >= 0.8) score += 14;
-      else if (projRatio >= 0.6) score += 8;
-      else score += 3;
-      if (years >= 20) score += 15;
-      else if (years >= 15) score += 11;
-      else if (years >= 10) score += 7;
-      else score += 3;
-      const lsRatio = totalLumpsum / (income * 12);
-      if (lsRatio >= 2) score += 15;
-      else if (lsRatio >= 0.5) score += 10;
-      else if (lsRatio > 0) score += 5;
-      if (stepup >= 15) score += 10;
-      else if (stepup >= 10) score += 8;
-      else if (stepup >= 5) score += 5;
-      else score += 2;
-      if (age <= 28) score += 10;
-      else if (age <= 33) score += 7;
-      else if (age <= 40) score += 4;
-      else score += 2;
-      const stab = document.getElementById('stability').value;
-      if (stab === 'stable') score += 5;
-      else if (stab === 'moderate') score += 3;
-      else score += 1;
-      score = Math.min(100, Math.round(score));
+  score = Math.min(100, Math.round(score));
 
-      document.getElementById('scoreNum').textContent = score;
-      document.getElementById('scoreFill').style.width = score + '%';
-      let verdict, vclass;
-      if (score >= 80) { verdict = '✓ Excellent — Your plan is built to last.'; vclass = ''; }
-      else if (score >= 65) { verdict = '⚠ Good — One or two moves will lock this in.'; vclass = 'warning'; }
-      else if (score >= 50) { verdict = '⚠ Fair — Real gaps that will hurt you later.'; vclass = 'warning'; }
-      else { verdict = '✕ At Risk — This plan will not reach your goal.'; vclass = 'danger'; }
-      document.getElementById('scoreVerdict').textContent = verdict;
-      document.getElementById('verdictBox').className = 'verdict ' + vclass;
-      document.getElementById('verdictBox').textContent = gap >= 0
-        ? 'Your projected corpus hits ' + fmt(corpus) + ', creating a ' + fmt(gap) + ' surplus against your inflation-adjusted target of ' + fmt(realTarget) + '.'
-        : 'Your real target (inflation-adjusted) is ' + fmt(realTarget) + ', but you\'ll only reach ' + fmt(corpus) + '. You\'re short by ' + fmt(Math.abs(gap)) + '.';
+  // Display results
+  document.getElementById('recSIP').textContent = fmt(requiredSIP);
 
-      document.getElementById('mCorpus').textContent = fmt(corpus);
-      document.getElementById('mTarget').textContent = fmt(realTarget);
-      document.getElementById('mGap').textContent = (gap >= 0 ? '+' : '') + fmt(gap);
+  let explainer;
+  if (!affordable) {
+    explainer = 'Your goal needs ₹' + Math.round(requiredSIP).toLocaleString('en-IN') + '/month — more than your ₹' + Math.round(saveable).toLocaleString('en-IN') + '/month surplus. Consider extending your timeline or revising the target.';
+  } else if (sipRatio > 0.6) {
+    explainer = 'You\'ll need to commit ' + Math.round(sipRatio * 100) + '% of your surplus to this goal. Tight but doable.';
+  } else {
+    explainer = 'Affordable at ' + Math.round(sipRatio * 100) + '% of your monthly surplus. You have buffer for other goals too.';
+  }
+  document.getElementById('recExplainer').textContent = explainer;
 
-      const cats = risk.name === 'Conservative'
-        ? ['Large Cap funds — lower volatility, steady compounding', 'Balanced Advantage Fund — auto-manages equity/debt', 'Short Duration Debt — for near-term goals']
-        : risk.name === 'Moderate'
-        ? ['Flexi Cap funds — spreads across all market caps intelligently', 'Large & Mid Cap funds — growth with stability cushion', 'ELSS (tax saving) — 80C benefit + equity returns']
-        : ['Mid Cap funds — higher CAGR over 10+ years', 'Small Cap funds — maximum growth, requires patience', 'Sectoral/Thematic — for high-conviction sector bets'];
+  document.getElementById('scoreNum').textContent = score;
 
-      document.getElementById('catList').innerHTML = cats.map(c =>
-        '<div class="category-item"><div class="category-dot"></div><div class="category-text">' + c + '</div></div>'
-      ).join('');
+  let scoreVerdict;
+  if (score >= 80) scoreVerdict = '<strong>Excellent.</strong> Your fundamentals are strong — long timeline, stable income, healthy savings ratio.';
+  else if (score >= 65) scoreVerdict = '<strong>Good.</strong> A few adjustments will lock this in. Consider extending the timeline or starting earlier.';
+  else if (score >= 50) scoreVerdict = '<strong>Fair.</strong> Real gaps in your plan. Your goal is steep relative to your income.';
+  else scoreVerdict = '<strong>At risk.</strong> Either reduce your target or extend timeline significantly.';
+  document.getElementById('scoreText').innerHTML = scoreVerdict;
 
-      window._data = { income, expenses, age, target, realTarget, years, inflation, sip, stepup, lumpsum, lumpsumExtra, totalLumpsum, lumpsumGrown, sipCorpusStepup, corpus, gap, goal, risk, score, saveable, stepupBenefit };
+  document.getElementById('mTarget').textContent = fmt(realTarget);
+  document.getElementById('mLumpsum').textContent = fmt(lumpsumGrown);
+  document.getElementById('mStatus').textContent = affordable ? 'On Track' : 'Stretch';
+  document.getElementById('mStatus').style.color = affordable ? 'var(--success)' : 'var(--warning)';
 
-      goStep(4);
-    }
+  const vBox = document.getElementById('verdictBox');
+  if (!affordable) {
+    vBox.className = 'verdict danger';
+    vBox.innerHTML = 'Your real target of <strong>' + fmt(realTarget) + '</strong> (after ' + inflation + '% inflation over ' + years + ' years) requires <strong>' + fmt(requiredSIP) + '/month</strong>. With ₹' + Math.round(saveable).toLocaleString('en-IN') + '/month available, this exceeds your capacity. Recommended action: extend timeline by 3-5 years, or revise target downward.';
+  } else if (lumpsum > 0) {
+    vBox.className = 'verdict';
+    vBox.innerHTML = 'Your existing <strong>' + fmt(lumpsum) + '</strong> investment will grow to <strong>' + fmt(lumpsumGrown) + '</strong> on its own. The recommended ' + fmt(requiredSIP) + '/month SIP (with ' + risk.stepup + '% annual step-up) covers the remaining gap to your <strong>' + fmt(realTarget) + '</strong> inflation-adjusted target.';
+  } else {
+    vBox.className = 'verdict';
+    vBox.innerHTML = 'To reach <strong>' + fmt(realTarget) + '</strong> (inflation-adjusted) in ' + years + ' years, you need a ' + fmt(requiredSIP) + '/month SIP with ' + risk.stepup + '% annual step-up. This assumes ' + risk.cagr + '% CAGR (matched to your ' + risk.name.toLowerCase() + ' risk profile).';
+  }
 
-    function unlockPaid() {
-      // Redirect to Razorpay payment link
-      window.location.href = 'https://rzp.io/rzp/kbCL0zY';
-    }
+  const cats = risk.name === 'Conservative'
+    ? ['Large Cap funds — lower volatility, steady long-term compounding', 'Balanced Advantage Fund — auto-manages equity/debt ratio', 'Short Duration Debt — for goals under 5 years']
+    : risk.name === 'Moderate'
+    ? ['Flexi Cap funds — diversified across all market caps', 'Large & Mid Cap funds — growth with stability cushion', 'ELSS — 80C tax benefit + equity returns']
+    : ['Mid Cap funds — higher CAGR potential over 10+ years', 'Small Cap funds — maximum growth, needs patience', 'Flexi Cap funds — for stability anchor'];
 
-    function showEmailCapture() {
-      document.getElementById('paywall').style.display = 'none';
-      document.getElementById('paidContent').classList.add('show');
-      document.getElementById('emailCaptureForm').style.display = 'block';
-    }
+  document.getElementById('catList').innerHTML = cats.map(c =>
+    '<div class="category-item"><div class="category-dot"></div><div class="category-text">' + c + '</div></div>'
+  ).join('');
 
-    async function submitEmail() {
-      const email = document.getElementById('userEmail').value.trim();
-      if (!email || !email.includes('@')) {
-        alert('Please enter a valid email');
-        return;
-      }
+  window._data = { income, expenses, age, target, realTarget, years, goal, risk, score, lumpsum, lumpsumGrown, requiredSIP, saveable, tax };
+  goStep(4);
+}
 
-      const d = window._data;
-      const payload = {
-        email: email,
-        goal: d.goal,
-        target: fmt(d.realTarget),
-        sipscore: d.score,
-        risk: d.risk.name,
-        timestamp: new Date().toLocaleString('en-IN')
-      };
+function unlockPaid() {
+  window.location.href = 'https://rzp.io/rzp/wJousr01';
+}
 
-      // Send to Google Sheets via webhook (Zapier/Apps Script)
-      try {
-        await fetch('https://hooks.zapier.com/hooks/catch/YOUR_ZAPIER_WEBHOOK_ID', {
-          method: 'POST',
-          body: JSON.stringify(payload)
-        });
-        document.getElementById('emailCaptureForm').innerHTML = '<div class="verdict" style="text-align: center; border: none;"><strong>✓ Email received!</strong><br/>I\'ll send your personalized fund picks within 1 hour.<br/><br/>Check your inbox (and spam folder).</div>';
-      } catch (e) {
-        console.error('Error submitting email:', e);
-        // Still show success even if webhook fails
-        document.getElementById('emailCaptureForm').innerHTML = '<div class="verdict" style="text-align: center; border: none;"><strong>✓ Thank you!</strong><br/>I\'ll reach out within 24 hours with your fund recommendations.</div>';
-      }
-    }
+function submitEmail() {
+  const email = document.getElementById('userEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    alert('Please enter a valid email');
+    return;
+  }
+  const d = window._data;
+  console.log('SIPscore Lead:', {
+    email: email,
+    goal: d.goal,
+    requiredSIP: d.requiredSIP,
+    target: d.realTarget,
+    score: d.score,
+    risk: d.risk.name,
+    timestamp: new Date().toLocaleString('en-IN')
+  });
 
-    function reset() {
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      document.querySelectorAll('.step-circle').forEach(c => c.classList.remove('active', 'done'));
-      document.getElementById('sc1').classList.add('active');
-      document.getElementById('view1').classList.add('active');
-      document.getElementById('paywall').style.display = 'block';
-      document.getElementById('paidContent').classList.remove('show');
-      currentStep = 1;
-    }
-  </script>
+  document.getElementById('emailCaptureForm').innerHTML =
+    '<div class="verdict" style="text-align: center; border: none; background: rgba(74,222,128,0.1); border-left-color: var(--success);">' +
+    '<strong style="color: var(--success); font-family: Poppins, sans-serif; font-size: 1.1rem;">✓ Payment Received</strong><br/><br/>' +
+    'Your personalized fund recommendations will be sent to:<br/><strong>' + email + '</strong><br/><br/>' +
+    'Expected delivery: within 1 hour. Check inbox & spam folder.<br/><br/>' +
+    '<span style="font-size: 0.85rem; color: var(--text-tertiary);">Questions? Reach out via the contact details in your email.</span>' +
+    '</div>';
+}
+
+function reset() {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.step-circle').forEach(c => c.classList.remove('active', 'done'));
+  document.getElementById('sc1').classList.add('active');
+  document.getElementById('view1').classList.add('active');
+  document.getElementById('paywall').style.display = 'block';
+  document.getElementById('paidContent').classList.remove('show');
+  currentStep = 1;
+  document.getElementById('tool').scrollIntoView({behavior: 'smooth'});
+}
+</script>
+
 </body>
 </html>
