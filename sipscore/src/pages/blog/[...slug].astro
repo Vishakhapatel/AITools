@@ -1,7 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { AUTHOR } from '../../consts';
+import { AUTHOR, ADSENSE_READY } from '../../consts';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
@@ -29,8 +29,8 @@ const fmtDate = (d: Date) =>
       {post.data.updatedDate && <span>· updated {fmtDate(post.data.updatedDate)}</span>}
     </div>
 
-    <!-- Display ad slot (labelled placeholder — add the AdSense snippet after approval) -->
-    <div class="ad-slot" aria-hidden="true" data-ad-slot="article-top">Advertisement</div>
+    {/* Display ad slot — hidden until AdSense is approved (flip ADSENSE_READY in consts.ts). */}
+    {ADSENSE_READY && <div class="ad-slot" aria-hidden="true" data-ad-slot="article-top">Advertisement</div>}
 
     <Content />
 

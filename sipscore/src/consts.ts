@@ -30,6 +30,13 @@ export const AFFILIATE = {
 };
 export const AFFILIATE_READY = AFFILIATE.url !== '#';
 
+// ── Display ads (Google AdSense) ──
+// Apply to AdSense only once you have more content + some real traffic.
+// After approval: set ADSENSE.client to your publisher id and flip ADSENSE_READY
+// to true. Until then the ad slot stays hidden (no empty "Advertisement" boxes).
+export const ADSENSE = { client: 'ca-pub-XXXXXXXXXXXXXXXX' }; // TODO: real publisher id
+export const ADSENSE_READY = false;
+
 // ── Author identity (§5 — a named byline is an SEO ranking signal) ──
 // TODO: replace with your real name, one-line bio and a photo at
 // public/author.jpg. Finance content ranks far worse when anonymous.
