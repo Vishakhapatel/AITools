@@ -278,6 +278,13 @@ input[type='range']::-moz-range-thumb { width: 22px; height: 22px; border-radius
   .nav { gap: 1rem; }
   .card { padding: 1.5rem; }
   .form-grid { grid-template-columns: 1fr; }
+  /* Tighten the hero so the CTA lands above the fold on phones */
+  .landing { min-height: auto; padding: 1rem 1.5rem 2.75rem; }
+  .eyebrow { margin-bottom: 0.75rem; }
+  .hero-title { font-size: clamp(1.9rem, 7.5vw, 2.4rem); margin-bottom: 1rem; }
+  .hero-sub { font-size: 1.02rem; margin-bottom: 1.25rem; }
+  .hero-meta { margin-top: 0.9rem; }
+  .trust-strip { margin-top: 2.5rem; padding: 1.5rem; }
   .tool-section { padding: 3.5rem 0.75rem; }
   .section { padding: 4rem 1.25rem; }
   .decode { padding: 4rem 1rem; }
