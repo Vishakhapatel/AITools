@@ -1,28 +1,30 @@
 ---
-title: "₹1 crore won't be ₹1 crore: the inflation trap in goal planning"
-description: "A goal set in today's rupees quietly shrinks every year. Here's why inflation-adjusting your target is the single most important step most people skip."
+title: "₹1 crore won't be ₹1 crore: inflation is quietly glowing-down your goal"
+description: "A goal set in today's rupees shrinks a little every single year. Inflation-adjusting your target is the one step almost everyone skips — here's why it matters."
 pubDate: 2026-07-15
 author: "Vishakha Patel"
 ---
 
-Ask most people their retirement number and they'll say something round: "₹1 crore", "₹2 crore". Then they plan a SIP to hit that number in 20 years — and miss the whole point.
+Ask anyone their money goal and they'll say something clean and round: *"1 crore."* *"2 crore."* Then they set a SIP to hit that exact number in 20 years — and walk straight into the trap. 🪤
 
-## The rupee you plan with isn't the rupee you'll spend
+## Plot twist: the rupee you plan with isn't the rupee you'll spend
 
-₹1 crore today and ₹1 crore in 20 years are not the same thing. At 6% inflation, what costs ₹1 crore today will cost roughly **₹3.2 crore** in 20 years. If you plan to reach ₹1 crore, you'll get there — and find it buys a third of what you imagined.
+₹1 crore today and ₹1 crore in 20 years are *not* the same thing. Not even close. At 6% inflation, whatever costs ₹1 crore today will cost roughly **₹3.2 crore** in 20 years.
 
-This is why the *real* (inflation-adjusted) target is the number that actually matters. Planning against the today-value quietly sets you up to fall short.
+So if you grind and actually hit ₹1 crore — congrats, you technically won… and it buys about a third of what you pictured. It's shrinkflation, but for your entire future. 💀
 
-## How to think about it
+This is why the number that actually matters is the **real (inflation-adjusted) target**. Planning against today's price tag quietly signs you up to fall short.
 
-- **Pick your goal in today's money** — it's easier to reason about ("I'd need ₹1 crore in today's terms").
-- **Let the tool inflate it** to the future value you'll actually need.
-- **Plan the SIP against that future number**, not the today number.
+## How to not get got
 
-A ₹6,000/month gap between planning against ₹1 crore and against ₹3.2 crore doesn't sound like much — until you realise one plan reaches your real goal and the other doesn't.
+- **Pick your goal in today's money** — way easier to reason about ("I'd want the buying power of ₹1 crore").
+- **Let the tool inflate it** to the future number you'll genuinely need.
+- **Plan the SIP against *that* number** — not the today one.
+
+The gap between planning for ₹1 crore vs ₹3.2 crore might look like a few thousand a month. But one plan lands you at your real goal, and the other lands you… disappointed. Different endings entirely.
 
 ## Two forces, opposite directions
 
-Inflation grows the target. Compounding grows your investments. Good planning simply makes sure the second outruns the first — and you can't check that unless both are in the maths.
+Inflation is inflating the target. Compounding is inflating your investments. Good planning is just making sure the second one outruns the first — and you literally cannot check that unless both are in the math. Most calculators only do one. Ours does both.
 
-> Educational information only, not investment advice. Inflation and return figures are assumptions for illustration and will differ in reality.
+> Real talk: this is education, not financial advice. Inflation and return figures are illustrative assumptions and will differ in real life, and KitnaSIP never recommends specific funds. For a plan built around your situation, talk to a SEBI-registered investment adviser.

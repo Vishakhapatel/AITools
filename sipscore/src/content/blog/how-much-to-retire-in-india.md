@@ -1,42 +1,40 @@
 ---
-title: "How much do you need to retire in India?"
-description: "A simple way to estimate your retirement corpus — and the monthly SIP that gets you there — based on your expenses, not your income."
+title: "How much do you actually need to retire in India? (the number, no vibes)"
+description: "A simple way to estimate your retirement corpus — and the monthly SIP that gets you there — based on your expenses, not your salary."
 pubDate: 2026-07-17
 author: "Vishakha Patel"
 ---
 
-Most people guess their retirement number from their **income** — "I earn ₹20 lakh, so I'll need a lot." But retirement isn't funded by the salary you'll no longer earn; it's funded against the **expenses** you'll still have. That single shift makes the whole calculation clearer.
+Most people guess their retirement number off their **salary** — "I earn well, so I'll need a fat corpus." Plot hole: retirement isn't paid for by the salary you'll no longer earn. It's paid against the **expenses** you'll still have. Fix that one framing and the whole thing gets clearer.
 
-## Step 1: Start with your annual expenses
+## Step 1: start with what you actually spend
 
-Forget your salary. What does your household actually *spend* in a year today? That's the number your retirement corpus has to support — adjusted for the fact that, by the time you retire, everything will cost more.
+Ignore your paycheck. What does your household *spend* in a year right now? *That's* the number your corpus has to cover — bumped up for the fact that by the time you retire, everything costs more (yeah, inflation again, it's the villain of every money story).
 
-## Step 2: The rule-of-thumb corpus
+## Step 2: the rough corpus rule
 
-A widely used rough guide is that your retirement corpus should be around **25 to 30 times your annual expenses at retirement.** The logic: if you withdraw roughly 3–4% of your corpus each year and the rest stays invested, it can last decades.
+A popular guideline: your retirement corpus should be around **25–30× your annual expenses at retirement.** The logic — pull out roughly 3–4% a year, leave the rest invested, and it can last decades.
 
-So if you expect to spend, say, ₹12 lakh a year (in future money) when you retire, a ballpark corpus is:
+So if you expect to spend ~₹12 lakh a year (future money) when you retire:
 
-- 25× → ₹3 crore
-- 30× → ₹3.6 crore
+- 25× → **₹3 crore**
+- 30× → **₹3.6 crore**
 
-These are **illustrative rules of thumb, not guarantees** — your real number depends on how long your retirement lasts, your other income (rent, pension, EPF), and your comfort with risk.
+These are rules of thumb, not guarantees — your real number depends on how long retirement lasts, other income (rent, EPF, pension), and your risk comfort.
 
-## Step 3: Don't forget inflation — twice
+## Step 3: inflation hits twice (this is where people fumble)
 
-Inflation hits retirement planning in two places, and missing either one is the classic mistake:
+1. **Your future expenses > today's.** ₹6 lakh/year of spending now could be ~₹19 lakh/year in 20 years at 6% inflation. 😵
+2. **Your corpus has to keep growing *through* retirement**, because prices don't stop rising the day you stop working.
 
-1. **Your future expenses are higher than today's.** ₹6 lakh of annual spending today could be ₹19 lakh a year in 20 years at 6% inflation.
-2. **Your corpus has to keep growing through retirement**, because prices keep rising after you stop working.
+This is exactly why "₹1 crore and I'm set" is usually cap for anyone with decades left on the clock.
 
-This is why a "₹1 crore is enough to retire" headline is usually wrong for anyone with decades to go.
+## Step 4: reverse-engineer the SIP
 
-## Step 4: Work backward to a monthly SIP
+Once you've got a realistic corpus + a timeline, the question flips to: *what monthly SIP, at a sensible assumed return, gets me there?* The longer your runway, the smaller that number — compounding rewards *starting early* way more than *investing big*.
 
-Once you have a realistic corpus target and a time horizon, the question becomes: *what monthly SIP, growing at a sensible assumed return, reaches it?* The longer your runway, the smaller that number — compounding rewards starting early far more than investing large.
+## The part calculators skip
 
-## The part most calculators skip
+Knowing the SIP you *need* is half the story. The other half: can you actually *afford* it from your monthly surplus — and if not, what do you tweak (time, target, or savings rate)? That gap is the whole reason the calculator below exists.
 
-Knowing the SIP you *need* is only half the answer. The other half is whether you can actually *afford* it from your monthly surplus — and if not, what to adjust (time, target, or savings rate). That gap is exactly what the free calculator below is built to show.
-
-> This is general educational information, not investment advice. All figures are illustrative assumptions, not guarantees, and do not recommend any specific fund. For a plan tailored to you, consult a SEBI-registered investment adviser.
+> Real talk: this is education, not financial advice. All figures are illustrative assumptions (not guarantees), and KitnaSIP never recommends specific funds. For a plan built around your life, talk to a SEBI-registered investment adviser.
