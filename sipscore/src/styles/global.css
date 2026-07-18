@@ -95,7 +95,7 @@ h1, h2, h3, h4, .font-display { font-family: 'Poppins', system-ui, sans-serif; l
 /* ── Landing ── */
 .landing { min-height: 88vh; display: flex; align-items: center; justify-content: center; padding: 4rem 1.5rem 5rem; text-align: center; position: relative; overflow: hidden; }
 .landing::before { content: ''; position: absolute; top: 20%; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; max-width: 90vw; background: radial-gradient(circle, rgba(212, 175, 55, 0.08), transparent 70%); pointer-events: none; }
-.landing-inner { max-width: 820px; margin: 0 auto; position: relative; z-index: 1; }
+.landing-inner { max-width: 820px; width: 100%; min-width: 0; margin: 0 auto; position: relative; z-index: 1; }
 .eyebrow { font-family: 'Space Mono', monospace; font-size: 0.85rem; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem; }
 .hero-title { font-family: 'Poppins', sans-serif; font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 700; line-height: 1.1; margin-bottom: 1.5rem; }
 .hero-title span { background: linear-gradient(135deg, var(--accent), var(--accent-bright)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
