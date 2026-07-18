@@ -31,5 +31,3 @@ A goal being out of reach today is a plot point, not the ending. You've got leve
 ## The vibe check
 
 A calculator that only shows the scary number is doing half a job and calling it a day. The useful version shows you the gap **and** the exits — so you leave with a plan instead of a pit in your stomach.
-
-> Real talk: this is education, not financial advice. The numbers are illustrative assumptions (markets don't move in straight lines), and KitnaSIP never tells you which fund to buy. For a plan built around your actual life, talk to a SEBI-registered investment adviser.

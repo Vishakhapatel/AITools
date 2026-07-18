@@ -26,5 +26,3 @@ The gap between planning for ₹1 crore vs ₹3.2 crore might look like a few th
 ## Two forces, opposite directions
 
 Inflation is inflating the target. Compounding is inflating your investments. Good planning is just making sure the second one outruns the first — and you literally cannot check that unless both are in the math. Most calculators only do one. Ours does both.
-
-> Real talk: this is education, not financial advice. Inflation and return figures are illustrative assumptions and will differ in real life, and KitnaSIP never recommends specific funds. For a plan built around your situation, talk to a SEBI-registered investment adviser.

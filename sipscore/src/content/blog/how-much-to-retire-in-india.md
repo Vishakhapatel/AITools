@@ -36,5 +36,3 @@ Once you've got a realistic corpus + a timeline, the question flips to: *what mo
 ## The part calculators skip
 
 Knowing the SIP you *need* is half the story. The other half: can you actually *afford* it from your monthly surplus — and if not, what do you tweak (time, target, or savings rate)? That gap is the whole reason the calculator below exists.
-
-> Real talk: this is education, not financial advice. All figures are illustrative assumptions (not guarantees), and KitnaSIP never recommends specific funds. For a plan built around your life, talk to a SEBI-registered investment adviser.

@@ -37,5 +37,3 @@ When you plan a goal with a flat SIP, you're secretly assuming you'll *never* in
 ## See it on your own goal
 
 The calculator below has a **step-up slider** — drag it and watch your projected corpus move in real time. Genuinely satisfying to see how much a tiny annual bump closes the gap.
-
-> Real talk: this is education, not financial advice. All figures are illustrative assumptions (not guarantees), and KitnaSIP never recommends specific funds. For a plan built around your life, talk to a SEBI-registered investment adviser.

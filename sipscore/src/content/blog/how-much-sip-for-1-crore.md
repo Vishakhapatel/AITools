@@ -40,5 +40,3 @@ A flat SIP pretends your salary never grows. Bump your SIP ~10% a year (a **step
 ## Get *your* number
 
 The table's a starting point; your real answer depends on your timeline, existing investments, and — the part that matters most — what you can actually afford each month. Run your own figures in the calculator below. It adjusts for inflation and checks the SIP against your surplus, so you leave with a number you can actually act on.
-
-> Real talk: this is education, not financial advice. All figures are illustrative assumptions (not guarantees), and KitnaSIP never recommends a specific fund. For a plan built around your life, talk to a SEBI-registered investment adviser.

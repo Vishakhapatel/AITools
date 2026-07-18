@@ -34,5 +34,3 @@ Notice these aren't fund picks — they're just *how* you phase money in. What y
 ## Put your own numbers in
 
 The calculator below folds both into one projection — it grows your **existing lumpsum** and your **monthly SIP** together toward your inflation-adjusted goal. So instead of debating SIP vs lumpsum in the abstract, you just… see the combined picture.
-
-> Real talk: this is education, not financial advice. All figures are illustrative assumptions (not guarantees), and KitnaSIP never recommends specific funds. For a plan built around your life, talk to a SEBI-registered investment adviser.
