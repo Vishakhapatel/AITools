@@ -1,0 +1,43 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { AUTHOR } from '../../consts';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const authorName = post.data.author ?? AUTHOR.name;
+
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+
+<BaseLayout title={`${post.data.title} — KitnaSIP`} description={post.data.description} path={`/blog/${post.id}/`}>
+  <article class="prose">
+    <h1>{post.data.title}</h1>
+    <div class="post-meta">
+      <span class="byline">
+        <img src={AUTHOR.photo} alt={authorName} width="36" height="36" loading="lazy" onerror="this.style.display='none'" />
+        <span class="who">{authorName}</span>
+      </span>
+      <span>·</span>
+      <time datetime={post.data.pubDate.toISOString()}>{fmtDate(post.data.pubDate)}</time>
+      {post.data.updatedDate && <span>· updated {fmtDate(post.data.updatedDate)}</span>}
+    </div>
+
+    <!-- Display ad slot (labelled placeholder — add the AdSense snippet after approval) -->
+    <div class="ad-slot" aria-hidden="true" data-ad-slot="article-top">Advertisement</div>
+
+    <Content />
+
+    <div class="post-cta">
+      <h2 style="margin:0 0 0.5rem">See what your goal actually needs</h2>
+      <p style="margin:0 0 1.25rem;color:var(--text-secondary)">Run your numbers through the free KitnaSIP calculator — inflation-adjusted, and it checks what you can afford.</p>
+      <a class="btn btn-primary" href="/#tool">Open the calculator →</a>
+    </div>
+  </article>
+</BaseLayout>

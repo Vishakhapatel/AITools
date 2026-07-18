@@ -1,0 +1,82 @@
+---
+import { SITE, GA_ID, NAV } from '../consts';
+import '../styles/global.css';
+
+const {
+  title = SITE.title,
+  description = SITE.description,
+  path = '',
+} = Astro.props;
+
+const canonical = new URL(path, SITE.url).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={SITE.locale} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Fonts: preconnect + display=swap for fast, non-blocking load -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Space+Mono:wght@400;700&family=Poppins:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Google Analytics (deferred; carried over from the original site) -->
+    <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}></script>
+    <script is:inline define:vars={{ GA_ID }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', GA_ID);
+    </script>
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+
+    <header class="site-header">
+      <div class="inner">
+        <a href="/" class="brand">Kitna<span>SIP</span></a>
+        <nav class="nav" aria-label="Primary">
+          {NAV.map((item) => <a href={item.href}>{item.label}</a>)}
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="footer">
+      <nav class="footer-links" aria-label="Footer">
+        <a href="/about">About</a>
+        <a href="/blog">Blog</a>
+        <a href="/contact">Contact</a>
+        <a href="/privacy">Privacy</a>
+      </nav>
+      <p class="footer-disclaimer">
+        KitnaSIP is an educational tool, not investment advice. It shows illustrative
+        projections based on assumptions you can change — it does not recommend specific
+        mutual funds and cannot predict returns. Mutual fund investments are subject to
+        market risks. Please consult a SEBI-registered investment adviser before investing.
+      </p>
+      <p>© {new Date().getFullYear()} KitnaSIP · Built for Indian salaried investors</p>
+    </footer>
+  </body>
+</html>

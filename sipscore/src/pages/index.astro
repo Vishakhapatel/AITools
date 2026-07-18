@@ -1,0 +1,276 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout>
+  <!-- ═══════════ LANDING ═══════════ -->
+  <section class="landing">
+    <div class="landing-inner">
+      <div class="eyebrow">For Indian Salaried Investors</div>
+      <h1 class="hero-title">
+        Every calculator tells you the SIP you <span>need</span>. This one checks the SIP you can
+        <span>&nbsp;afford</span>.
+      </h1>
+      <p class="hero-sub">
+        KitnaSIP — literally, “how much SIP?” — works out the monthly SIP your goal really needs,
+        adjusted for inflation, then weighs it against what you can genuinely set aside and shows the
+        honest trade-offs to close any gap. Built for salaried professionals. Free, and no sign-up.
+      </p>
+      <a class="hero-cta" href="#tool">Calculate my SIPscore →</a>
+      <div class="hero-meta">Free · Takes 2 minutes · No sign-up · Nothing to buy</div>
+
+      <div class="trust-strip">
+        <div class="trust-item"><div class="trust-num">Affordable</div><div class="trust-label">Not just required</div></div>
+        <div class="trust-item"><div class="trust-num">Inflation</div><div class="trust-label">Adjusted math</div></div>
+        <div class="trust-item"><div class="trust-num">Live</div><div class="trust-label">Trade-off sliders</div></div>
+        <div class="trust-item"><div class="trust-num">2 min</div><div class="trust-label">To your answer</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ DECODE THE NAME (brand moment) ═══════════ -->
+  <section class="decode" aria-label="What KitnaSIP means">
+    <div class="decode-orb" aria-hidden="true"></div>
+    <div class="decode-inner">
+      <div class="decode-eyebrow">// decode the name</div>
+      <h2 class="decode-hero"><span class="dev">कितना</span> SIP<span class="qm">?</span></h2>
+      <div class="decode-tags">
+        <span><b>kitna</b> — how much</span>
+        <span class="dot">·</span>
+        <span><b>SIP</b> — should you invest</span>
+      </div>
+      <p class="decode-punch">
+        The one number every other calculator makes <em>you</em> guess.
+        <span class="hl">We just tell you.</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════ HOW IT WORKS ═══════════ -->
+  <section class="section">
+    <h2 class="section-title">How KitnaSIP is different</h2>
+    <p class="section-sub">Three things no other SIP calculator does.</p>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-num">01 / AFFORDABILITY</div>
+        <div class="how-title">The SIP you can actually afford</div>
+        <div class="how-desc">
+          Others tell you the SIP you need and stop there. KitnaSIP compares it to what you can
+          genuinely invest each month, and tells you honestly whether it is comfortable, tight, or
+          out of reach for now.
+        </div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">02 / REAL MATH</div>
+        <div class="how-title">Inflation-adjusted, month by month</div>
+        <div class="how-desc">
+          A ₹1 crore goal today is worth far more in 20 years. KitnaSIP simulates every month —
+          step-ups and existing investments included — against your inflation-adjusted target.
+        </div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">03 / TRADE-OFFS</div>
+        <div class="how-title">Levers you can drag</div>
+        <div class="how-desc">
+          If the goal is a stretch, adjust the timeline, target, and step-up on live sliders and
+          watch the numbers update — so you leave with a plan, not just a scary number.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ TOOL ═══════════ -->
+  <section class="tool-section" id="tool">
+    <div class="container">
+      <div class="tool-header">
+        <div class="tool-eyebrow">Start Here</div>
+        <h2 class="tool-title">Your SIPscore Analysis</h2>
+        <p class="tool-sub">Answer three short steps to get an honest, personalised result.</p>
+      </div>
+
+      <!-- Stepper -->
+      <div class="stepper">
+        <div class="step"><div class="step-circle active" id="sc1">1</div><div class="step-label">Profile</div></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-circle" id="sc2">2</div><div class="step-label">Goal</div></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-circle" id="sc3">3</div><div class="step-label">Risk</div></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-circle" id="sc4">4</div><div class="step-label">Result</div></div>
+      </div>
+
+      <!-- STEP 1: Profile -->
+      <div class="view active" id="view1">
+        <div class="card">
+          <h2 class="card-title">About your money</h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="income">Monthly take-home <span class="req">*</span></label>
+              <div class="money-field">
+                <span class="rupee">₹</span>
+                <input type="text" inputmode="numeric" id="income" data-money data-required value="75,000" autocomplete="off" />
+              </div>
+              <div class="form-hint">Your salary after tax</div>
+              <div class="field-error" id="err-income"></div>
+            </div>
+            <div class="form-group">
+              <label for="expenses">Monthly expenses <span class="req">*</span></label>
+              <div class="money-field">
+                <span class="rupee">₹</span>
+                <input type="text" inputmode="numeric" id="expenses" data-money data-required value="40,000" autocomplete="off" />
+              </div>
+              <div class="form-hint">Rent, food, EMIs — everything you spend</div>
+              <div class="field-error" id="err-expenses"></div>
+            </div>
+          </div>
+
+          <div class="surplus-banner" id="surplusBanner"></div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="capacity">Amount you can invest monthly</label>
+              <div class="money-field">
+                <span class="rupee">₹</span>
+                <input type="text" inputmode="numeric" id="capacity" data-money autocomplete="off" placeholder="auto" />
+              </div>
+              <div class="form-hint">Optional — leave blank and we use 70% of your surplus, keeping a buffer</div>
+              <div class="field-error" id="err-capacity"></div>
+            </div>
+            <div class="form-group">
+              <label for="lumpsum">Existing investments</label>
+              <div class="money-field">
+                <span class="rupee">₹</span>
+                <input type="text" inputmode="numeric" id="lumpsum" data-money value="1,00,000" autocomplete="off" />
+              </div>
+              <div class="form-hint">Current mutual-fund or lumpsum balance (0 if none)</div>
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="stability">Income stability</label>
+              <select id="stability">
+                <option value="stable">Very stable (govt / MNC)</option>
+                <option value="moderate" selected>Moderate (private sector)</option>
+                <option value="variable">Variable (freelance / startup)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="tax">Tax regime</label>
+              <select id="tax">
+                <option value="new">New regime</option>
+                <option value="old">Old regime (80C / NPS)</option>
+              </select>
+              <div class="form-hint">Only affects which fund categories we mention</div>
+            </div>
+          </div>
+        </div>
+        <div class="nav-buttons">
+          <div></div>
+          <button class="btn btn-primary" data-next="1">Next: Your goal →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Goal -->
+      <div class="view" id="view2">
+        <div class="card">
+          <h2 class="card-title">What are you investing for?</h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="goal">Your financial goal</label>
+              <select id="goal">
+                <option value="retirement">Retirement corpus</option>
+                <option value="education">Child's education</option>
+                <option value="house">House down payment</option>
+                <option value="fire">FIRE — financial independence</option>
+                <option value="wealth">Wealth creation</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="target">Target amount (today's value) <span class="req">*</span></label>
+              <div class="money-field">
+                <span class="rupee">₹</span>
+                <input type="text" inputmode="numeric" id="target" data-money data-required value="1,00,00,000" autocomplete="off" />
+              </div>
+              <div class="form-hint">In today's rupees — we adjust for inflation</div>
+              <div class="field-error" id="err-target"></div>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="years">Years to achieve <span class="req">*</span></label>
+              <input type="number" id="years" data-required value="20" min="1" max="40" />
+              <div class="field-error" id="err-years"></div>
+            </div>
+            <div class="form-group">
+              <label for="inflation">Inflation assumption (%)</label>
+              <input type="number" id="inflation" value="6" min="3" max="12" step="0.5" />
+              <div class="form-hint">India average is about 6%</div>
+            </div>
+          </div>
+        </div>
+        <div class="nav-buttons">
+          <button class="btn btn-secondary" data-goto="1">← Back</button>
+          <button class="btn btn-primary" data-next="2">Next: Your risk →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Risk -->
+      <div class="view" id="view3">
+        <div class="card">
+          <h2 class="card-title">Understanding your risk profile</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
+            We use these to choose the return <em>assumption</em> and the fund categories that fit —
+            not to label you.
+          </p>
+          <div style="margin-bottom: 2rem;">
+            <label style="font-family: 'Poppins', sans-serif; font-weight: 500; display: block; margin-bottom: 1rem;">
+              If your portfolio dropped 25% in one year, you would:
+            </label>
+            <div class="chip-group" id="rc" role="group" aria-label="Reaction to a market drop">
+              <span class="chip active" data-group="rc" data-value="panicSell" role="button" tabindex="0">Stop the SIP immediately</span>
+              <span class="chip" data-group="rc" data-value="holdAnxious" role="button" tabindex="0">Hold, but feel anxious</span>
+              <span class="chip" data-group="rc" data-value="buyDip" role="button" tabindex="0">Invest more — buy the dip</span>
+            </div>
+          </div>
+          <div>
+            <label style="font-family: 'Poppins', sans-serif; font-weight: 500; display: block; margin-bottom: 1rem;">
+              Your equity mutual-fund experience:
+            </label>
+            <div class="chip-group" id="ec" role="group" aria-label="Investing experience">
+              <span class="chip active" data-group="ec" data-value="none" role="button" tabindex="0">None — I'm new</span>
+              <span class="chip" data-group="ec" data-value="under2" role="button" tabindex="0">Under 2 years</span>
+              <span class="chip" data-group="ec" data-value="over2" role="button" tabindex="0">2+ years</span>
+            </div>
+          </div>
+        </div>
+        <div class="nav-buttons">
+          <button class="btn btn-secondary" data-goto="2">← Back</button>
+          <button class="btn btn-primary" id="calcBtn">Calculate my SIPscore →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: Result (populated by calculator.js) -->
+      <div class="view" id="view4">
+        <div class="headline-verdict" id="headlineVerdict"></div>
+        <div id="numbersBlock"></div>
+        <div id="chartWrap"></div>
+        <div id="gaugeWrap"></div>
+        <div id="tradeoff"></div>
+        <div id="catCard"></div>
+        <div id="affiliateWrap"></div>
+        <div class="card">
+          <div class="assumptions" id="assumptions"></div>
+        </div>
+        <div class="nav-buttons">
+          <button class="btn btn-secondary" data-goto="3">← Back</button>
+          <button class="btn btn-secondary" id="resetBtn">Start over</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    import '../scripts/calculator.js';
+  </script>
+</BaseLayout>

@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../consts';
+---
+
+<BaseLayout title="Privacy Policy — KitnaSIP" description="How KitnaSIP handles your data." path="/privacy">
+  <section class="prose">
+    <h1>Privacy Policy</h1>
+    <p><em>Last updated: {new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</em></p>
+
+    <p>
+      KitnaSIP is designed to respect your privacy. This page explains, in plain language, what data
+      is and isn't collected. <strong>Please review this with your own advisers before publishing —
+      it's a starting template, not legal advice.</strong>
+    </p>
+
+    <h2>The calculator</h2>
+    <p>
+      Everything you type into the KitnaSIP calculator — income, expenses, goal, and so on — is
+      processed <strong>entirely in your browser</strong>. Those figures are not sent to us or stored
+      on any server. Refreshing the page clears them.
+    </p>
+
+    <h2>Analytics</h2>
+    <p>
+      We use Google Analytics to understand aggregate, anonymous usage (which pages are visited, from
+      which country, on what kind of device). This helps us improve the site. It does not identify you
+      personally. You can block it with any standard ad/tracker blocker.
+    </p>
+
+    <h2>Advertising</h2>
+    <p>
+      We may show display advertising (e.g. Google AdSense). Ad networks may use cookies to serve
+      relevant ads; you can manage ad personalisation through your Google account settings.
+    </p>
+
+    <h2>Affiliate links</h2>
+    <p>
+      Some outbound links (for example, to open a demat account) may be affiliate links. If you use
+      one and sign up, we may receive a fixed referral fee at no extra cost to you. This never affects
+      what the calculator shows.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      Questions about privacy? Reach us via the <a href="/contact">contact page</a>.
+    </p>
+
+    <p style="color:var(--text-tertiary);font-size:0.85rem">This policy applies to {SITE.url}.</p>
+  </section>
+</BaseLayout>

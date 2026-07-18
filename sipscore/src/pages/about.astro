@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { AUTHOR } from '../consts';
+---
+
+<BaseLayout title="About — KitnaSIP" description="Who is behind KitnaSIP, and why it exists." path="/about">
+  <section class="prose">
+    <h1>About KitnaSIP</h1>
+
+    <div class="post-meta">
+      <span class="byline author-lg">
+        <img src={AUTHOR.photo} alt={AUTHOR.name} width="72" height="72" loading="lazy" onerror="this.style.display='none'" />
+        <span class="who">{AUTHOR.name}</span>
+      </span>
+    </div>
+
+    <p>
+      KitnaSIP started from a simple frustration: every SIP calculator tells you the amount you
+      <em>need</em>, but none checks the amount you can actually <em>afford</em>. If you're a salaried
+      professional in India trying to plan honestly, that gap is exactly where the anxiety lives.
+    </p>
+
+    <h2>What this tool does — and doesn't</h2>
+    <p>
+      KitnaSIP takes your income, expenses, goal and horizon, adjusts the goal for inflation, and
+      shows you the monthly SIP it really needs — then compares that to your surplus and gives you
+      levers to close any gap. It's free, needs no signup, and there's nothing to buy.
+    </p>
+    <p>
+      It is an <strong>educational tool, not investment advice</strong>. KitnaSIP never recommends
+      specific mutual funds. It shows illustrative projections based on assumptions you control, and
+      points you to fund <em>categories</em> to research — never named funds to buy. For a personal
+      plan, please consult a SEBI-registered investment adviser.
+    </p>
+
+    <h2>How KitnaSIP is funded</h2>
+    <p>
+      KitnaSIP is free to use. If it ever earns anything, it's through a fixed referral fee when
+      someone chooses to open a demat account via a partner link, and through display advertising —
+      never by charging for advice or selling fund recommendations. Those payouts never change what
+      you pay or what the tool shows you.
+    </p>
+
+    <h2>Who writes this</h2>
+    <p>
+      {AUTHOR.name} — {AUTHOR.bio} Have a question or spotted something wrong? <a href="/contact">Get in touch</a>.
+    </p>
+  </section>
+</BaseLayout>
