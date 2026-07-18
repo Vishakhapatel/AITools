@@ -30,6 +30,7 @@ html {
   background: linear-gradient(135deg, var(--bg-dark) 0%, #1a2135 100%);
   background-attachment: fixed;
   scroll-behavior: smooth;
+  overflow-x: hidden; /* safety net: never allow sideways scroll */
 }
 body {
   color: var(--text-primary);
@@ -277,9 +278,15 @@ input[type='range']::-moz-range-thumb { width: 22px; height: 22px; border-radius
   .nav { gap: 1rem; }
   .card { padding: 1.5rem; }
   .form-grid { grid-template-columns: 1fr; }
-  .stepper { gap: 0.25rem; }
-  .step-circle { width: 40px; height: 40px; font-size: 1rem; }
-  .step-line { margin: 0 0.2rem; }
+  .tool-section { padding: 3.5rem 0.75rem; }
+  .section { padding: 4rem 1.25rem; }
+  .decode { padding: 4rem 1rem; }
+  .decode-hero { font-size: clamp(2.4rem, 12vw, 6.5rem); }
+  .stepper { gap: 0.15rem; }
+  .step { min-width: 0; }
+  .step-circle { width: 34px; height: 34px; font-size: 0.9rem; }
+  .step-label { font-size: 0.6rem; letter-spacing: 0; }
+  .step-line { margin: 0 0.15rem; max-width: 18px; }
   .gauge-wrap { flex-direction: column; text-align: center; }
   .growth-chart { min-height: 240px; }
 }
