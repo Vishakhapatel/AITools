@@ -6,9 +6,9 @@
 
 export const SITE = {
   name: 'KitnaSIP',
-  // Domain being registered: kitnasip.in. Used for canonical URLs,
-  // sitemap.xml and robots.txt. Keep the https, no trailing slash.
-  url: 'https://www.kitnasip.in',
+  // Live domain. Used for canonical URLs, sitemap.xml and robots.txt.
+  // Apex (no www); keep the https and no trailing slash.
+  url: 'https://kitnasip.in',
   title: 'KitnaSIP — how much SIP do you need, and can you afford it?',
   description:
     'A free SIP calculator for Indian salaried investors. It works out the monthly SIP your goal needs, checks it against what you can actually afford, and shows the trade-offs to close the gap. Inflation-adjusted, honest, no signup.',

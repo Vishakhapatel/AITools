@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.kitnasip.in/sitemap-index.xml
+Sitemap: https://kitnasip.in/sitemap-index.xml

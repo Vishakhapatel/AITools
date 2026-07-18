@@ -6,8 +6,7 @@ import mdx from '@astrojs/mdx';
 
 // https://astro.build/config
 export default defineConfig({
-  // Keep in sync with SITE.url in src/consts.ts. Domain: kitnasip.in.
-  // Drives sitemap.xml and absolute URLs.
-  site: 'https://www.kitnasip.in',
+  // Keep in sync with SITE.url in src/consts.ts. Drives sitemap.xml and absolute URLs.
+  site: 'https://kitnasip.in',
   integrations: [sitemap(), mdx()],
 });
