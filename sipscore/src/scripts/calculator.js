@@ -362,7 +362,9 @@ function renderTradeoff() {
 // live-slider sandbox
 function sandboxHtml() {
   const p = plan;
-  const sipStart = Math.round((p.requiredSIP > 0 ? Math.min(p.requiredSIP, p.surplus > 0 ? p.surplus : p.requiredSIP) : p.comfortSurplus) || p.comfortSurplus || 5000);
+  // Start the SIP slider at the amount the user can actually invest, so it opens
+  // on "here's what your affordable SIP achieves" — they adjust up/down from there.
+  const sipStart = Math.round(p.comfortSurplus > 0 ? p.comfortSurplus : (p.requiredSIP > 0 ? p.requiredSIP : 5000));
   const sipMax = Math.max(5000, Math.ceil(Math.max(p.requiredSIP, p.surplus, p.comfortSurplus) * 1.8 / 500) * 500);
   const goalMax = Math.max(p.goalToday * 2, 500000);
   return `
@@ -395,7 +397,9 @@ function wireSliders() {
   // figure the stepped slider can't land on, so we read from here, not the range.
   const vals = {};
   ids.forEach((id) => { vals[id] = +$(id).value; });
-  const showBox = (id) => { $(id + 'Val').value = cfg[id].money ? groupIndian(String(vals[id])) : String(vals[id]); };
+  // Grow the field to fit its content so long figures (₹1,50,000+) never clip.
+  const sizeBox = (id) => { const b = $(id + 'Val'); b.style.width = Math.max(4, b.value.length + 1) + 'ch'; };
+  const showBox = (id) => { $(id + 'Val').value = cfg[id].money ? groupIndian(String(vals[id])) : String(vals[id]); sizeBox(id); };
 
   const recompute = () => {
     const goalFuture = inflate(vals.slGoal, ctx.inflation, vals.slYears);
@@ -430,6 +434,7 @@ function wireSliders() {
       vals[id] = num;
       range.value = num; // range snaps to its step for the thumb position only
       box.value = money ? groupIndian(String(num)) : String(num);
+      sizeBox(id);
       recompute();
     };
     box.addEventListener('input', () => apply(false));
