@@ -359,6 +359,43 @@ function renderTradeoff() {
   attachRecalc();
 }
 
+// Pick the single most sensible lever to close the gap, plus the slider target that applies it.
+// Priority favours the least-painful realistic moves: a little more time, then a modest step-up,
+// then more time, then a steeper step-up, then investing more, and only lastly trimming the goal.
+function suggestLever(p) {
+  const L = p.levers;
+  if (!L) return null; // goal already affordable at what they can invest — nothing to suggest
+  const s = (n) => (n > 1 ? 's' : '');
+  const baseStep = Math.round(p.stepUp * 100);
+
+  const extend = (L.extend && L.extend.added > 0 && L.extend.years <= 40)
+    ? { set: { years: L.extend.years }, added: L.extend.added,
+        desc: `Simplest fix: give it ${L.extend.added} more year${s(L.extend.added)} — finish in ${L.extend.years} instead of ${p.years}.` }
+    : null;
+  const steeper = L.steeper
+    ? { set: { step: Math.round(L.steeper.stepUp * 100) }, aggressive: L.steeper.aggressive,
+        desc: baseStep === 0
+          ? `Simplest fix: add a ${Math.round(L.steeper.stepUp * 100)}% annual step-up — raise your SIP that much each year as your salary grows.`
+          : `Simplest fix: raise your annual step-up to ${Math.round(L.steeper.stepUp * 100)}% as your salary grows.` }
+    : null;
+  const invest = p.requiredSIP <= p.surplus
+    ? { set: { sip: Math.ceil(p.requiredSIP / 500) * 500 },
+        desc: `Simplest fix: invest ${fmt(p.requiredSIP)}/mo — above the ${fmt(p.comfortSurplus)} you called comfortable, but still within your surplus.` }
+    : null;
+  const lower = L.lower
+    ? { set: { goal: Math.floor(L.lower.maxGoalToday / 1000) * 1000 },
+        desc: `Realistically, at what you can comfortably invest this goal fits better around ${fmt(L.lower.maxGoalToday)} — or combine the levers above.` }
+    : null;
+
+  if (extend && extend.added <= 5) return extend;
+  if (steeper && !steeper.aggressive) return steeper;
+  if (extend) return extend;
+  if (invest) return invest;
+  // Nothing gentle works — trimming the goal (or combining levers) is the honest call.
+  // An aggressive step-up is left to the Lever cards above, not headlined as a "simple fix".
+  return lower;
+}
+
 // live-slider sandbox
 function sandboxHtml() {
   const p = plan;
@@ -377,6 +414,19 @@ function sandboxHtml() {
       ${sliderRow('slStep', 'Annual step-up', 0, 25, 1, Math.round(p.stepUp * 100), 'int', '%')}
       <p class="sandbox-tip">Drag the slider for a quick sweep, or tap the number to type an exact figure.</p>
       <div class="sandbox-verdict" id="sandboxVerdict"></div>
+      <p class="sandbox-outcome" id="sandboxOutcome"></p>
+      ${suggestBlock(p)}
+    </div>`;
+}
+// Recommended-lever call to action. Data attributes carry the slider target(s) to apply.
+function suggestBlock(p) {
+  const sug = suggestLever(p);
+  if (!sug) return '';
+  const dataAttrs = Object.entries(sug.set).map(([k, v]) => `data-${k}="${v}"`).join(' ');
+  return `
+    <div class="sandbox-suggest" id="sandboxSuggest">
+      <span class="suggest-text">💡 ${sug.desc}</span>
+      <button type="button" class="btn-suggest" id="applySuggest" ${dataAttrs}>Apply this →</button>
     </div>`;
 }
 // The value beside each slider is an editable field — slider for quick
@@ -397,9 +447,28 @@ function wireSliders() {
   // figure the stepped slider can't land on, so we read from here, not the range.
   const vals = {};
   ids.forEach((id) => { vals[id] = +$(id).value; });
+  // Snapshot the opening values (affordable SIP, original years/goal/step-up) so the
+  // outcome line can describe what the user changed to make the goal work.
+  const base = { ...vals };
   // Grow the field to fit its content so long figures (₹1,50,000+) never clip.
   const sizeBox = (id) => { const b = $(id + 'Val'); b.style.width = Math.max(4, b.value.length + 1) + 'ch'; };
   const showBox = (id) => { $(id + 'Val').value = cfg[id].money ? groupIndian(String(vals[id])) : String(vals[id]); sizeBox(id); };
+
+  // Plain-English list of the levers the user has moved away from the starting point.
+  const joinNat = (a) => (a.length <= 1 ? (a[0] || '') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]);
+  const describeChanges = () => {
+    const parts = [];
+    if (vals.slSip !== base.slSip) parts.push(`${vals.slSip > base.slSip ? 'stretching' : 'easing'} your SIP to ${fmt(vals.slSip)}/mo`);
+    const dy = vals.slYears - base.slYears;
+    if (dy > 0) parts.push(`giving it ${dy} more year${dy > 1 ? 's' : ''}`);
+    else if (dy < 0) parts.push(`cutting ${-dy} year${-dy > 1 ? 's' : ''}`);
+    if (vals.slStep !== base.slStep) {
+      if (base.slStep === 0) parts.push(`adding a ${vals.slStep}% annual step-up`);
+      else parts.push(`${vals.slStep > base.slStep ? 'raising' : 'lowering'} your step-up to ${vals.slStep}% a year`);
+    }
+    if (vals.slGoal !== base.slGoal) parts.push(`${vals.slGoal < base.slGoal ? 'trimming' : 'raising'} the goal to ${fmt(vals.slGoal)}`);
+    return parts;
+  };
 
   const recompute = () => {
     const goalFuture = inflate(vals.slGoal, ctx.inflation, vals.slYears);
@@ -413,6 +482,24 @@ function wireSliders() {
       v.className = 'sandbox-verdict short';
       v.innerHTML = `Short by ${fmt(goalFuture - corpus)} — projected ${fmt(corpus)} vs ${fmt(goalFuture)} target<small>nudge the SIP up, add years, or lower the goal to close it</small>`;
     }
+    // Outcome line — articulate what the user's dragging achieves.
+    const met = corpus >= goalFuture;
+    const o = $('sandboxOutcome');
+    const changes = describeChanges();
+    if (met) {
+      o.className = 'sandbox-outcome ok';
+      o.innerHTML = changes.length
+        ? `✓ You reach this goal by ${joinNat(changes)}.`
+        : `✓ At ${fmt(base.slSip)}/mo — the amount you can invest — this goal is already on track. Drag a lever to explore what-ifs.`;
+    } else {
+      o.className = 'sandbox-outcome short';
+      o.innerHTML = changes.length
+        ? `Not quite — still ${fmt(goalFuture - corpus)} short after ${joinNat(changes)}. Push one lever a little further to close it.`
+        : `At ${fmt(base.slSip)}/mo — the amount you can invest — you're ${fmt(goalFuture - corpus)} short. Drag a lever to see what closes the gap.`;
+    }
+    // The recommended-lever action is only useful while there's still a gap.
+    const sug = $('sandboxSuggest');
+    if (sug) sug.style.display = met ? 'none' : '';
   };
 
   // Slider drag → exact state + typed box follows.
@@ -441,6 +528,21 @@ function wireSliders() {
     box.addEventListener('blur', () => apply(true));
     box.addEventListener('keydown', (e) => { if (e.key === 'Enter') box.blur(); });
   });
+
+  // Recommended-lever action: reset to the affordable baseline, then apply the one suggested lever.
+  const applyBtn = $('applySuggest');
+  if (applyBtn) {
+    applyBtn.addEventListener('click', () => {
+      Object.assign(vals, base);
+      const d = applyBtn.dataset;
+      if (d.years) vals.slYears = +d.years;
+      if (d.step != null) vals.slStep = +d.step;
+      if (d.sip) vals.slSip = +d.sip;
+      if (d.goal) vals.slGoal = +d.goal;
+      ids.forEach((id) => { const r = $(id); r.value = Math.min(Math.max(vals[id], +r.min), +r.max); showBox(id); });
+      recompute();
+    });
+  }
 
   ids.forEach(showBox);
   recompute();
