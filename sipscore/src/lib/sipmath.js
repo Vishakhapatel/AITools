@@ -135,7 +135,10 @@ export function computePlan(input) {
   else comfortSurplus = COMFORT_RATIO * surplus;
   const capacityExceedsSurplus = capacityProvided && capacity > surplus;
 
-  const gap = requiredSIP - surplus; // positive = short of even the full surplus
+  const gap = requiredSIP - surplus; // short even if you invested your ENTIRE surplus
+  // The gap that actually matters to the user: required minus what they can invest
+  // (their stated capacity, or 70% of surplus). This is what the UI shows.
+  const affordGap = requiredSIP > 0 ? Math.max(0, requiredSIP - comfortSurplus) : 0;
 
   let band;
   if (surplus <= 0) band = 'noSurplus';
@@ -188,7 +191,7 @@ export function computePlan(input) {
   return {
     r, profile, rm, stepUp, inflation, years, N, overridden: rOverride != null,
     goalToday, goalFuture, fvLumpsumOnly, fvPerUnitSIP,
-    requiredSIP, surplus, comfortSurplus, capacityProvided, capacityExceedsSurplus, gap,
+    requiredSIP, surplus, comfortSurplus, capacityProvided, capacityExceedsSurplus, gap, affordGap,
     projectedCorpus, totalInvested, wealthGained,
     band, sipScore, scoreBand, levers, costOfDelay, shortHorizonAggressive,
   };

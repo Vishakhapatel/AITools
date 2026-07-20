@@ -160,12 +160,12 @@ function renderHeadline() {
       sub = `That sits within the ${fmt(p.comfortSurplus)}/month you can comfortably invest, leaving a buffer for other goals.`;
       break;
     case 'tight':
-      h = `Doable, but it will use most of your spare cash — here is the honest picture.`;
-      sub = `The ${fmt(p.requiredSIP)}/month this needs fits inside your ${fmt(p.surplus)} surplus, but leaves little slack. The levers below show gentler paths.`;
+      h = `Doable, but it needs a bit more than you'd comfortably invest — here's the honest picture.`;
+      sub = `This needs ${fmt(p.requiredSIP)}/month versus the ${fmt(p.comfortSurplus)} you can comfortably invest — within your ${fmt(p.surplus)} total surplus if you stretch, but tight. The levers below show gentler paths.`;
       break;
     case 'notAffordable':
-      h = `This goal isn't affordable yet — you're short by about ${fmt(p.gap)}/month.`;
-      sub = `It needs ${fmt(p.requiredSIP)}/month against a ${fmt(p.surplus)} surplus. That's normal for a big goal — the levers below show how to close the gap.`;
+      h = `This goal isn't affordable yet — you're short by about ${fmt(p.affordGap)}/month.`;
+      sub = `It needs ${fmt(p.requiredSIP)}/month, but you can invest ${fmt(p.comfortSurplus)}. That's normal for a big goal — the levers below show how to close the gap.`;
       break;
   }
   el.innerHTML = `<h2>${h}</h2><p class="hv-sub">${sub}</p>`;
@@ -200,9 +200,9 @@ function renderNumbers() {
     <div class="numbers-grid">
       <div class="big">${sipCell}</div>
       ${metric('You can invest', fmt(p.comfortSurplus) + '/mo', p.capacityProvided ? 'the amount you entered' : '70% of your surplus')}
-      ${p.gap > 0
-        ? metric('The monthly gap', fmt(p.gap) + '/mo', 'short of your surplus', 'var(--warning)')
-        : metric('Buffer left', fmt(Math.max(0, p.surplus - p.requiredSIP)) + '/mo', 'after this SIP', 'var(--success)')}
+      ${p.affordGap > 0
+        ? metric('The monthly gap', fmt(p.affordGap) + '/mo', 'beyond what you can invest', 'var(--warning)')
+        : metric('Buffer left', fmt(Math.max(0, p.comfortSurplus - p.requiredSIP)) + '/mo', 'of what you can invest', 'var(--success)')}
       ${metricTip('Real target', fmt(p.goalFuture), `${fmt(p.goalToday)} today, +inflation`, `Your ${fmt(p.goalToday)} in today's money, grown at ${(p.inflation * 100).toFixed(1)}% inflation over ${p.years} years.`)}
       ${metric('You would invest', fmt(p.totalInvested), 'total, over the years')}
       ${metric('Growth on top', fmt(p.wealthGained), 'from compounding', 'var(--success)')}
