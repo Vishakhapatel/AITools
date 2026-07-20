@@ -106,6 +106,8 @@ const chipValue = (group) => document.querySelector(`.chip[data-group="${group}"
 // ── read all inputs ──
 function readInputs() {
   const capacity = parseMoney('capacity');
+  // Expected return is optional: blank → assume one from the risk profile (engine default).
+  const rr = parseFloat($('expreturn').value);
   return {
     income: parseMoney('income') || 0,
     expenses: parseMoney('expenses') || 0,
@@ -117,6 +119,8 @@ function readInputs() {
     goalToday: parseMoney('target') || 0,
     years: Math.max(1, Math.round(numField('years', 20))),
     inflation: numField('inflation', 6) / 100,
+    stepUp: Math.max(0, numField('stepup', 0)) / 100, // user-controlled; 0 = flat SIP
+    returnRate: Number.isFinite(rr) ? rr / 100 : null, // null → derive from profile
     riskBehavior: chipValue('rc'),
     experience: chipValue('ec'),
   };
@@ -127,8 +131,10 @@ function calculate(rOverride = null) {
   if (!validateStep(1)) { showStep(1); return; }
   if (!validateStep(2)) { showStep(2); return; }
   const input = readInputs();
-  plan = computePlan({ ...input, rOverride });
-  ctx = { existing: input.existing, inflation: input.inflation, rm: plan.rm, taxRegime: input.taxRegime };
+  // Precedence: an explicit recalc arg (the 8% short-horizon reset) > the user's typed return > profile-derived.
+  const effReturn = rOverride != null ? rOverride : input.returnRate;
+  plan = computePlan({ ...input, rOverride: effReturn });
+  ctx = { existing: input.existing, inflation: input.inflation, rm: plan.rm, taxRegime: input.taxRegime, userReturn: input.returnRate != null };
   renderHeadline();
   renderNumbers();
   renderChart();
@@ -194,7 +200,10 @@ function renderNumbers() {
   const sipCell = p.requiredSIP === 0
     ? metricHero('Required SIP', '₹0', 'existing investments cover it')
     : metricHero('Required SIP', fmt(p.requiredSIP) + '<span class="per">/mo</span>', `to reach the goal in ${p.years} years`);
-  const returnTip = `We assume ${(p.r * 100).toFixed(0)}% a year for a ${p.profile.toLowerCase()} profile${p.overridden ? ' (recalculated at a conservative rate)' : ''}. It's an assumption for illustration — real returns vary and are never guaranteed.`;
+  const returnTip = ctx.userReturn
+    ? `You set the expected return to ${(p.r * 100).toFixed(0)}% a year — your own assumption, shown for illustration only. Real returns vary and are never guaranteed. (Your ${p.profile.toLowerCase()} profile still guides the fund categories below.)`
+    : `We assume ${(p.r * 100).toFixed(0)}% a year for a ${p.profile.toLowerCase()} profile${p.overridden ? ' (recalculated at a conservative rate)' : ''}. It's an assumption for illustration — real returns vary and are never guaranteed.`;
+  const returnSub = ctx.userReturn ? 'your input' : p.profile.toLowerCase() + ' profile';
 
   wrap.innerHTML = `
     <div class="numbers-grid">
@@ -206,7 +215,7 @@ function renderNumbers() {
       ${metricTip('Real target', fmt(p.goalFuture), `${fmt(p.goalToday)} today, +inflation`, `Your ${fmt(p.goalToday)} in today's money, grown at ${(p.inflation * 100).toFixed(1)}% inflation over ${p.years} years.`)}
       ${metric('You would invest', fmt(p.totalInvested), 'total, over the years')}
       ${metric('Growth on top', fmt(p.wealthGained), 'from compounding', 'var(--success)')}
-      ${metricTip('Return assumption', (p.r * 100).toFixed(0) + '%', p.profile.toLowerCase() + ' profile', returnTip)}
+      ${metricTip('Return assumption', (p.r * 100).toFixed(0) + '%', returnSub, returnTip)}
     </div>
     ${p.costOfDelay && p.costOfDelay.extra > 0
       ? `<div class="delay-note">⏳ <strong>Cost of waiting:</strong> start ${p.costOfDelay.delay} year${p.costOfDelay.delay > 1 ? 's' : ''} later and this rises to <strong>${fmt(p.costOfDelay.requiredLater)}/mo</strong> — about ${fmt(p.costOfDelay.extra)}/mo more, for the same goal by the same date.</div>`
@@ -334,7 +343,7 @@ function renderTradeoff() {
     : lever('Lever A', 'Give it more time', `Even over a very long horizon, ${fmt(p.comfortSurplus)}/month doesn't reach this target — time alone won't close it.`));
   if (L.lower) cards.push(lever('Lever B', 'Aim a little lower', `With ${fmt(p.comfortSurplus)}/month you'd comfortably reach <strong>${fmt(L.lower.maxGoalToday)}</strong> (in today's money) instead of ${fmt(p.goalToday)}.`));
   cards.push(L.steeper
-    ? lever('Lever C', 'Step up faster', `Increasing your SIP <strong>${Math.round(L.steeper.stepUp * 100)}% a year</strong> (instead of 10%) reaches it at ${fmt(p.comfortSurplus)}/month.${L.steeper.aggressive ? ' That assumes fast salary growth — treat it as a stretch.' : ''}`, L.steeper.aggressive)
+    ? lever('Lever C', 'Step up faster', `Increasing your SIP <strong>${Math.round(L.steeper.stepUp * 100)}% a year</strong> (instead of ${Math.round(p.stepUp * 100)}%) reaches it at ${fmt(p.comfortSurplus)}/month.${L.steeper.aggressive ? ' That assumes fast salary growth — treat it as a stretch.' : ''}`, L.steeper.aggressive)
     : lever('Lever C', 'Step up faster', `Even a steep annual step-up doesn't bridge the gap at ${fmt(p.comfortSurplus)}/month alone.`));
   if (L.incomeGap) cards.push(lever('Lever D', 'Close the income gap', `You'd need about <strong>${fmt(L.incomeGap.comfortGap)}/month</strong> more to invest — from a raise, side income, or trimming expenses — to fund this comfortably.`));
 

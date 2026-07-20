@@ -90,9 +90,11 @@ export function leverLowerGoal({ comfortSurplus, stepUp, rm, N, existing, inflat
   return { maxGoalToday, maxFuture };
 }
 
-export function leverSteeperStepUp({ comfortSurplus, rm, N, existing, goalFuture }) {
+export function leverSteeperStepUp({ comfortSurplus, rm, N, existing, goalFuture, startStepUp = 0 }) {
   const MAX_STEP_UP = 0.40;
-  for (let s = 0.10; s <= MAX_STEP_UP + 1e-9; s += 0.01) {
+  // Always propose something faster than the user's current step-up.
+  const from = Math.round((Math.max(0, startStepUp) + 0.01) * 100) / 100;
+  for (let s = from; s <= MAX_STEP_UP + 1e-9; s += 0.01) {
     if (simulateFV(comfortSurplus, s, rm, N, existing) >= goalFuture) {
       return { stepUp: Math.round(s * 100) / 100, aggressive: s > 0.15 };
     }
@@ -173,7 +175,7 @@ export function computePlan(input) {
     levers = {
       extend: leverExtendTimeline({ comfortSurplus, stepUp, rm, existing, goalToday, inflation, startYears: years }),
       lower: leverLowerGoal({ comfortSurplus, stepUp, rm, N, existing, inflation, years }),
-      steeper: leverSteeperStepUp({ comfortSurplus, rm, N, existing, goalFuture }),
+      steeper: leverSteeperStepUp({ comfortSurplus, rm, N, existing, goalFuture, startStepUp: stepUp }),
       incomeGap: { requiredSIP, gap: Math.max(0, gap), comfortGap: Math.max(0, requiredSIP - comfortSurplus) },
     };
   }
