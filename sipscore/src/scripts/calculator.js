@@ -360,27 +360,37 @@ function sandboxHtml() {
     <div class="sandbox">
       <h3>Play with it</h3>
       <p class="hint">Drag any slider and watch the projected corpus and verdict update instantly. The return assumption stays at ${(p.r * 100).toFixed(0)}% (${p.profile.toLowerCase()}).</p>
-      ${sliderRow('slSip', 'Monthly SIP', 0, sipMax, 500, sipStart)}
-      ${sliderRow('slYears', 'Years', 1, 40, 1, p.years)}
-      ${sliderRow('slGoal', "Goal (today's ₹)", 100000, goalMax, 100000, p.goalToday)}
-      ${sliderRow('slStep', 'Annual step-up', 0, 25, 1, Math.round(p.stepUp * 100))}
+      ${sliderRow('slSip', 'Monthly SIP', 0, sipMax, 500, sipStart, 'money')}
+      ${sliderRow('slYears', 'Years', 1, 40, 1, p.years, 'int', 'yrs')}
+      ${sliderRow('slGoal', "Goal (today's ₹)", 100000, goalMax, 100000, p.goalToday, 'money')}
+      ${sliderRow('slStep', 'Annual step-up', 0, 25, 1, Math.round(p.stepUp * 100), 'int', '%')}
+      <p class="sandbox-tip">Drag the slider for a quick sweep, or tap the number to type an exact figure.</p>
       <div class="sandbox-verdict" id="sandboxVerdict"></div>
     </div>`;
 }
-const sliderRow = (id, label, min, max, step, val) =>
+// The value beside each slider is an editable field — slider for quick
+// sweeps, typed box for a precise figure. Kept in two-way sync in wireSliders.
+const sliderRow = (id, label, min, max, step, val, kind, suffix = '') =>
   `<div class="slider-row">
-    <div class="slabel"><span>${label}</span><span class="sval" id="${id}Val"></span></div>
+    <div class="slabel">
+      <span>${label}</span>
+      <span class="sval">${kind === 'money' ? '<span class="sval-pre">₹</span>' : ''}<input type="text" inputmode="numeric" class="sval-edit" id="${id}Val" aria-label="${label} — type an exact value"/>${suffix ? `<span class="sval-suf">${suffix}</span>` : ''}</span>
+    </div>
     <input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}" aria-label="${label}"/>
   </div>`;
 
 function wireSliders() {
-  const disp = { slSip: (v) => fmt(v), slYears: (v) => v + ' yrs', slGoal: (v) => fmt(v), slStep: (v) => v + '%' };
-  const ids = Object.keys(disp);
+  const cfg = { slSip: { money: true }, slYears: { money: false }, slGoal: { money: true }, slStep: { money: false } };
+  const ids = Object.keys(cfg);
+  // Exact values the engine computes on — the typed box can hold a precise
+  // figure the stepped slider can't land on, so we read from here, not the range.
+  const vals = {};
+  ids.forEach((id) => { vals[id] = +$(id).value; });
+  const showBox = (id) => { $(id + 'Val').value = cfg[id].money ? groupIndian(String(vals[id])) : String(vals[id]); };
+
   const recompute = () => {
-    const sip = +$('slSip').value, years = +$('slYears').value, goalToday = +$('slGoal').value, stepUp = +$('slStep').value / 100;
-    ids.forEach((id) => { $(id + 'Val').textContent = disp[id](+$(id).value); });
-    const goalFuture = inflate(goalToday, ctx.inflation, years);
-    const corpus = simulateFV(sip, stepUp, ctx.rm, years * 12, ctx.existing);
+    const goalFuture = inflate(vals.slGoal, ctx.inflation, vals.slYears);
+    const corpus = simulateFV(vals.slSip, vals.slStep / 100, ctx.rm, vals.slYears * 12, ctx.existing);
     const v = $('sandboxVerdict');
     if (corpus >= goalFuture) {
       const over = corpus - goalFuture;
@@ -391,7 +401,34 @@ function wireSliders() {
       v.innerHTML = `Short by ${fmt(goalFuture - corpus)} — projected ${fmt(corpus)} vs ${fmt(goalFuture)} target<small>nudge the SIP up, add years, or lower the goal to close it</small>`;
     }
   };
-  ids.forEach((id) => $(id).addEventListener('input', recompute));
+
+  // Slider drag → exact state + typed box follows.
+  ids.forEach((id) => {
+    $(id).addEventListener('input', () => { vals[id] = +$(id).value; showBox(id); recompute(); });
+  });
+
+  // Typed box → exact state + slider position (clamped to the slider's range).
+  ids.forEach((id) => {
+    const box = $(id + 'Val');
+    const range = $(id);
+    const money = cfg[id].money;
+    const apply = (forceMin) => {
+      const digits = box.value.replace(/[^\d]/g, '');
+      if (digits === '' && !forceMin) return; // let them clear mid-edit; tidy on blur
+      let num = digits === '' ? +range.min : parseInt(digits, 10);
+      if (num > +range.max) num = +range.max; // guard runaway typos
+      if (forceMin && num < +range.min) num = +range.min;
+      vals[id] = num;
+      range.value = num; // range snaps to its step for the thumb position only
+      box.value = money ? groupIndian(String(num)) : String(num);
+      recompute();
+    };
+    box.addEventListener('input', () => apply(false));
+    box.addEventListener('blur', () => apply(true));
+    box.addEventListener('keydown', (e) => { if (e.key === 'Enter') box.blur(); });
+  });
+
+  ids.forEach(showBox);
   recompute();
 }
 
