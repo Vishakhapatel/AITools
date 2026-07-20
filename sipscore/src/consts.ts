@@ -31,10 +31,13 @@ export const AFFILIATE = {
 export const AFFILIATE_READY = AFFILIATE.url !== '#';
 
 // ── Display ads (Google AdSense) ──
-// Apply to AdSense only once you have more content + some real traffic.
-// After approval: set ADSENSE.client to your publisher id and flip ADSENSE_READY
-// to true. Until then the ad slot stays hidden (no empty "Advertisement" boxes).
-export const ADSENSE = { client: 'ca-pub-XXXXXXXXXXXXXXXX' }; // TODO: real publisher id
+export const ADSENSE = { client: 'ca-pub-8031434253913892' };
+// The AdSense script goes in <head> as soon as a real publisher id is set — this is
+// what lets Google verify and review the site, and (with Auto ads on in the dashboard)
+// serve ads after approval.
+export const ADSENSE_ENABLED = /^ca-pub-\d+$/.test(ADSENSE.client);
+// Separately gates the manual in-article ad units. Keep false until approved so there
+// are no blank "Advertisement" boxes during the review.
 export const ADSENSE_READY = false;
 
 // ── Author identity (§5 — a named byline is an SEO ranking signal) ──

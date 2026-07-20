@@ -1,5 +1,5 @@
 ---
-import { SITE, GA_ID, NAV } from '../consts';
+import { SITE, GA_ID, NAV, ADSENSE, ADSENSE_ENABLED } from '../consts';
 import '../styles/global.css';
 
 const {
@@ -37,6 +37,11 @@ const canonical = new URL(path, SITE.url).href;
       href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Space+Mono:wght@400;700&family=Poppins:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Google AdSense (site verification + Auto ads once approved) -->
+    {ADSENSE_ENABLED && (
+      <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE.client}`} crossorigin="anonymous"></script>
+    )}
 
     <!-- Google Analytics (deferred; carried over from the original site) -->
     <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}></script>
