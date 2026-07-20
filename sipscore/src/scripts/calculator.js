@@ -23,6 +23,18 @@ function groupIndian(digits) {
   const rest = digits.slice(0, -3).replace(/\B(?=(\d{2})+(?!\d))/g, ',');
   return rest + ',' + last3;
 }
+// After reformatting a field, put the caret back after the same digit it was on,
+// counting digits (not characters) so inserted/removed commas don't shift the cursor.
+// This lets people edit a digit mid-number instead of the value jumping to the end.
+function placeCaretByDigits(inp, digitsBeforeCaret) {
+  const f = inp.value;
+  let pos = f.length, seen = 0;
+  if (digitsBeforeCaret <= 0) pos = 0;
+  else for (let i = 0; i < f.length; i++) {
+    if (/\d/.test(f[i])) { seen++; if (seen === digitsBeforeCaret) { pos = i + 1; break; } }
+  }
+  try { inp.setSelectionRange(pos, pos); } catch (e) { /* non-text inputs */ }
+}
 const parseMoney = (id) => {
   const raw = ($(id)?.value || '').replace(/[^\d]/g, '');
   return raw === '' ? NaN : parseInt(raw, 10);
@@ -63,9 +75,8 @@ function validateStep(step) {
     const expenses = parseMoney('expenses');
     ok = setError('income', !Number.isFinite(income) || income <= 0 ? 'Enter your monthly take-home.' : '') && ok;
     ok = setError('expenses', !Number.isFinite(expenses) ? 'Enter your monthly expenses.' : '') && ok;
-    // capacity is optional and never blocks — the engine caps it at surplus,
-    // and the surplus banner already shows what we'll actually invest.
-    setError('capacity', '');
+    // capacity is optional, but if given it can't exceed what's actually left after expenses.
+    ok = validateCapacity() && ok;
   }
   if (step === 2) {
     const target = parseMoney('target');
@@ -74,6 +85,18 @@ function validateStep(step) {
     ok = setError('years', !Number.isFinite(years) || years < 1 || years > 40 ? 'Enter a horizon between 1 and 40 years.' : '') && ok;
   }
   return ok;
+}
+
+// Capacity can't exceed the surplus (income − expenses). Returns true when valid.
+function validateCapacity() {
+  const income = parseMoney('income');
+  const expenses = parseMoney('expenses');
+  const capacity = parseMoney('capacity');
+  if (Number.isFinite(income) && Number.isFinite(expenses) && Number.isFinite(capacity) && capacity > 0 && capacity > income - expenses) {
+    const surplus = Math.max(0, income - expenses);
+    return setError('capacity', `You only have ${fmt(surplus)} left after expenses — you can't invest more than that.`);
+  }
+  return setError('capacity', '');
 }
 
 // ── live surplus banner (step 1) ──
@@ -309,8 +332,8 @@ function renderGauge() {
 }
 
 // 5 ── trade-off engine
-const lever = (tag, title, body, flag = false) =>
-  `<div class="lever ${flag ? 'flag' : ''}"><div class="lever-tag">${tag}</div><div class="lever-title">${title}</div><div class="lever-body">${body}</div></div>`;
+const lever = (tag, title, body) =>
+  `<div class="lever"><div class="lever-tag">${tag}</div><div class="lever-title">${title}</div><div class="lever-body">${body}</div></div>`;
 
 function renderTradeoff() {
   const p = plan;
@@ -343,7 +366,7 @@ function renderTradeoff() {
     : lever('Lever A', 'Give it more time', `Even over a very long horizon, ${fmt(p.comfortSurplus)}/month doesn't reach this target — time alone won't close it.`));
   if (L.lower) cards.push(lever('Lever B', 'Aim a little lower', `With ${fmt(p.comfortSurplus)}/month you'd comfortably reach <strong>${fmt(L.lower.maxGoalToday)}</strong> (in today's money) instead of ${fmt(p.goalToday)}.`));
   cards.push(L.steeper
-    ? lever('Lever C', 'Step up faster', `Increasing your SIP <strong>${Math.round(L.steeper.stepUp * 100)}% a year</strong> (instead of ${Math.round(p.stepUp * 100)}%) reaches it at ${fmt(p.comfortSurplus)}/month.${L.steeper.aggressive ? ' That assumes fast salary growth — treat it as a stretch.' : ''}`, L.steeper.aggressive)
+    ? lever('Lever C', 'Step up faster', `Increasing your SIP <strong>${Math.round(L.steeper.stepUp * 100)}% a year</strong> (instead of ${Math.round(p.stepUp * 100)}%) reaches it at ${fmt(p.comfortSurplus)}/month.${L.steeper.aggressive ? ' That assumes fast salary growth — treat it as a stretch.' : ''}`)
     : lever('Lever C', 'Step up faster', `Even a steep annual step-up doesn't bridge the gap at ${fmt(p.comfortSurplus)}/month alone.`));
   if (L.incomeGap) cards.push(lever('Lever D', 'Close the income gap', `You'd need about <strong>${fmt(L.incomeGap.comfortGap)}/month</strong> more to invest — from a raise, side income, or trimming expenses — to fund this comfortably.`));
 
@@ -513,6 +536,8 @@ function wireSliders() {
     const range = $(id);
     const money = cfg[id].money;
     const apply = (forceMin) => {
+      const caret = box.selectionStart ?? box.value.length;
+      const digitsBeforeCaret = box.value.slice(0, caret).replace(/[^\d]/g, '').length;
       const digits = box.value.replace(/[^\d]/g, '');
       if (digits === '' && !forceMin) return; // let them clear mid-edit; tidy on blur
       let num = digits === '' ? +range.min : parseInt(digits, 10);
@@ -522,6 +547,7 @@ function wireSliders() {
       range.value = num; // range snaps to its step for the thumb position only
       box.value = money ? groupIndian(String(num)) : String(num);
       sizeBox(id);
+      if (!forceMin) placeCaretByDigits(box, digitsBeforeCaret);
       recompute();
     };
     box.addEventListener('input', () => apply(false));
@@ -597,9 +623,11 @@ function init() {
   // money inputs → live Indian-format grouping
   document.querySelectorAll('input[data-money]').forEach((inp) => {
     inp.addEventListener('input', () => {
-      const digits = inp.value.replace(/[^\d]/g, '');
-      inp.value = groupIndian(digits);
-      if (['income', 'expenses', 'capacity'].includes(inp.id)) updateSurplus();
+      const caret = inp.selectionStart ?? inp.value.length;
+      const digitsBeforeCaret = inp.value.slice(0, caret).replace(/[^\d]/g, '').length;
+      inp.value = groupIndian(inp.value.replace(/[^\d]/g, ''));
+      placeCaretByDigits(inp, digitsBeforeCaret);
+      if (['income', 'expenses', 'capacity'].includes(inp.id)) { updateSurplus(); validateCapacity(); }
     });
   });
   updateSurplus();

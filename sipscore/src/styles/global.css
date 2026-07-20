@@ -192,7 +192,6 @@ h1, h2, h3, h4, .font-display { font-family: 'Poppins', system-ui, sans-serif; l
 .lever-title { font-family: 'Poppins', sans-serif; font-weight: 600; margin-bottom: 0.5rem; font-size: 1rem; }
 .lever-body { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; }
 .lever-body strong { color: var(--text-primary); }
-.lever.flag { border-color: var(--warning); }
 
 /* live sliders */
 .sandbox { background: rgba(13, 59, 13, 0.12); border: 1px solid var(--accent); border-radius: var(--radius); padding: 1.75rem; margin-bottom: 1.5rem; }
