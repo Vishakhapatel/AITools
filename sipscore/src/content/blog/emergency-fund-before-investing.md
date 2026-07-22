@@ -2,7 +2,7 @@
 title: "How big should your emergency fund be — and why it comes before investing"
 description: "Before you start a single SIP, you need a cushion. Here's how big your emergency fund should be and where to park it — the unsexy step that saves your whole plan."
 pubDate: 2026-07-08
-author: "Vishakha Patel"
+author: "KitnaSIP Team"
 ---
 
 Everyone wants to talk about investing. Nobody wants to talk about the boring thing that has to come *first*: your emergency fund. It's the financial equivalent of stretching before the gym — skippable, until the day it very much isn't. 🩹

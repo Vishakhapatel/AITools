@@ -40,14 +40,12 @@ export const ADSENSE_ENABLED = /^ca-pub-\d+$/.test(ADSENSE.client);
 // are no blank "Advertisement" boxes during the review.
 export const ADSENSE_READY = false;
 
-// ── Author identity (§5 — a named byline is an SEO ranking signal) ──
-// TODO: replace with your real name, one-line bio and a photo at
-// public/author.jpg. Finance content ranks far worse when anonymous.
+// ── Author identity (a byline is a small SEO/trust signal) ──
+// Anonymous brand byline + an illustrated brand avatar (public/author.svg).
 export const AUTHOR = {
-  name: 'Vishakha Patel',
-  // Pick your favourite from the options Claude suggested (or send your own).
+  name: 'KitnaSIP Team',
   bio: 'breaks down money for salaried folks who were never taught this stuff, minus the jargon and the fund tips.',
-  photo: '/author.jpg', // optional — add this file to /public to show a headshot
+  photo: '/author.svg',
 };
 
 // Primary navigation.

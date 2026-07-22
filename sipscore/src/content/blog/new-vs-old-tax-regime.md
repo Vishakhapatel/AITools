@@ -2,7 +2,7 @@
 title: "New vs old tax regime: which one actually saves you more?"
 description: "The new regime has lower rates but no deductions; the old one is the opposite. Here's a simple way to figure out which saves a salaried person more — without a spreadsheet meltdown."
 pubDate: 2026-07-16
-author: "Vishakha Patel"
+author: "KitnaSIP Team"
 ---
 
 Every year around tax season, the group chat lights up: *"new regime ya old regime, bro?"* And every year someone confidently gives the wrong answer. Let's fix that with a framework you can actually reason about. 🧾

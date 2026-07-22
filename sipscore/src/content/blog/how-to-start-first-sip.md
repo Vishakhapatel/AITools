@@ -2,7 +2,7 @@
 title: "How to start your first SIP (a no-jargon guide for total beginners)"
 description: "Never invested before? Here's exactly how a SIP works and how to start your first one — in plain English, no finance degree required."
 pubDate: 2026-07-12
-author: "Vishakha Patel"
+author: "KitnaSIP Team"
 ---
 
 Investing can feel like a members-only club where everyone else got the rulebook and you didn't. Charts, jargon, uncles with "hot tips"… it's a lot. Good news: starting your first SIP is genuinely simple. Here's the whole thing, no gatekeeping. 🚪

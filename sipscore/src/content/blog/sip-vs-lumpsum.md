@@ -2,7 +2,7 @@
 title: "SIP vs lumpsum: the debate that's lowkey pointless (for most of us)"
 description: "For most salaried people the honest answer is 'it depends' — and usually you don't even have to pick. Here's how to think about it without the hype."
 pubDate: 2026-07-14
-author: "Vishakha Patel"
+author: "KitnaSIP Team"
 ---
 
 "SIP vs lumpsum" gets argued about like it's IPL, usually with more heat than sense. The honest take for most salaried folks is way calmer than either side wants to admit: **they solve different problems, and you rarely have to choose.**

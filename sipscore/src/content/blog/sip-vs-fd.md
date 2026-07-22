@@ -2,7 +2,7 @@
 title: "SIP vs FD: where should your money actually go?"
 description: "Fixed deposits feel safe; SIPs feel scary. Here's the honest comparison — returns, risk, tax, and liquidity — so you can decide without the family debate."
 pubDate: 2026-07-11
-author: "Vishakha Patel"
+author: "KitnaSIP Team"
 ---
 
 Every Indian family has this debate. Your parents: *"FD is safe, beta."* The internet: *"SIP or you'll die poor."* Both are kind of right and kind of dramatic. Let's do the honest version. 🥊

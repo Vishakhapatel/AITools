@@ -2,7 +2,7 @@
 title: "Step-up SIP: the lazy cheat code that quietly grows your corpus"
 description: "Bumping your SIP a little each year — in step with your salary — can seriously shrink the gap to your goal. Here's why it works and how to turn it on."
 pubDate: 2026-07-16
-author: "Vishakha Patel"
+author: "KitnaSIP Team"
 ---
 
 Quiet truth about most people's SIPs: they set an amount once and never touch it again. Meanwhile their salary keeps climbing. Five years later they're still investing the same ₹10,000 they picked when they earned way less — and wondering why the goal still feels miles away. The cheat code they're missing? A **step-up SIP.**

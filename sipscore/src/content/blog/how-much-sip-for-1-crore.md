@@ -2,7 +2,7 @@
 title: "How much SIP do you need to reach ₹1 crore? (real answer, no fluff)"
 description: "The honest answer depends on your timeline, your return assumption, and inflation — the thing everyone forgets. Here's how to figure out the monthly SIP for a ₹1 crore goal."
 pubDate: 2026-07-18
-author: "Vishakha Patel"
+author: "KitnaSIP Team"
 ---
 
 "How much SIP for 1 crore?" might be the most-Googled money question in India. And most answers hand you one clean number while hiding all the assumptions behind it. Sneaky. Let's actually do this properly.

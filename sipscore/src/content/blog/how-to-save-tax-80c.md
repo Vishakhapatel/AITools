@@ -2,7 +2,7 @@
 title: "How to save tax under Section 80C without overthinking it"
 description: "₹1.5 lakh of tax deductions is sitting right there. A plain-English rundown of your 80C options — and which ones suit which kind of person."
 pubDate: 2026-07-09
-author: "Vishakha Patel"
+author: "KitnaSIP Team"
 ---
 
 Every year, same story: it's March, your HR is begging for investment proofs, and you're panic-Googling "how to save tax" while throwing money at a random policy a relative sold you. 😮‍💨 Let's fix that with a calm, one-time understanding of **Section 80C**.

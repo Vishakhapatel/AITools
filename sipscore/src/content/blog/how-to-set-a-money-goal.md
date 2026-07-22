@@ -2,7 +2,7 @@
 title: "How to set a money goal you'll actually hit (not just 'get rich')"
 description: "Vague goals get vague results. Here's how to turn 'I want to be financially secure' into a specific number, a deadline, and a monthly SIP you can actually plan around."
 pubDate: 2026-07-18
-author: "Vishakha Patel"
+author: "KitnaSIP Team"
 ---
 
 "I want to be financially free." "I want to build wealth." Beautiful. Also useless — because you can't plan for a vibe. A goal your money can act on needs three boring things: a **number**, a **deadline**, and a **reality check**. Here's how to build one. 🎯

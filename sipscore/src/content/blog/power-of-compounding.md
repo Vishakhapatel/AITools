@@ -2,7 +2,7 @@
 title: "The power of compounding: why starting early beats investing more"
 description: "Compounding is the closest thing to free money in investing — but only if you give it time. Here's how it actually works, and why a 25-year-old's ₹10k beats a 35-year-old's."
 pubDate: 2026-07-15
-author: "Vishakha Patel"
+author: "KitnaSIP Team"
 ---
 
 Everyone throws around "the power of compounding" like it's a spell from Hogwarts. But once it clicks, you genuinely can't unsee it — and you start wishing someone had shown you this at 22. So here it is, no textbook energy. 🧙

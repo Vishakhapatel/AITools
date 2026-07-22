@@ -2,7 +2,7 @@
 title: "₹1 crore won't be ₹1 crore: inflation is quietly glowing-down your goal"
 description: "A goal set in today's rupees shrinks a little every single year. Inflation-adjusting your target is the one step almost everyone skips — here's why it matters."
 pubDate: 2026-07-15
-author: "Vishakha Patel"
+author: "KitnaSIP Team"
 ---
 
 Ask anyone their money goal and they'll say something clean and round: *"1 crore."* *"2 crore."* Then they set a SIP to hit that exact number in 20 years — and walk straight into the trap. 🪤

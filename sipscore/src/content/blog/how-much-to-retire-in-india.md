@@ -2,7 +2,7 @@
 title: "How much do you actually need to retire in India? (the number, no vibes)"
 description: "A simple way to estimate your retirement corpus — and the monthly SIP that gets you there — based on your expenses, not your salary."
 pubDate: 2026-07-17
-author: "Vishakha Patel"
+author: "KitnaSIP Team"
 ---
 
 Most people guess their retirement number off their **salary** — "I earn well, so I'll need a fat corpus." Plot hole: retirement isn't paid for by the salary you'll no longer earn. It's paid against the **expenses** you'll still have. Fix that one framing and the whole thing gets clearer.

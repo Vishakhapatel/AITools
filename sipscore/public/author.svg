@@ -1,0 +1,13 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="KitnaSIP">
+  <defs>
+    <linearGradient id="ksBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#17512f"/>
+      <stop offset="1" stop-color="#0c2c19"/>
+    </linearGradient>
+  </defs>
+  <circle cx="50" cy="50" r="50" fill="url(#ksBg)"/>
+  <circle cx="50" cy="50" r="44" fill="none" stroke="#d4af37" stroke-opacity="0.22" stroke-width="2"/>
+  <polyline points="26,68 42,54 54,60 72,36" fill="none" stroke="#d4af37" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M62 36 H72 V46" fill="none" stroke="#d4af37" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="26" cy="68" r="5.5" fill="#d4af37"/>
+</svg>

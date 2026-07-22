@@ -2,7 +2,7 @@
 title: "PPF vs ELSS: which is the smarter 80C pick?"
 description: "Both save tax under 80C, but they're opposite animals — one is a guaranteed government scheme, the other a market-linked equity fund. Here's how to choose (or use both)."
 pubDate: 2026-07-17
-author: "Vishakha Patel"
+author: "KitnaSIP Team"
 ---
 
 If you're on the old tax regime and trying to fill your ₹1.5 lakh 80C limit, two names come up constantly: **PPF** and **ELSS**. They both save tax — but that's about all they have in common. Picking blindly is how people end up with a portfolio that doesn't match their goal. 🎯

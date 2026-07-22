@@ -2,7 +2,7 @@
 title: "Your SIP feels too small? Here's the number every calculator hides"
 description: "Most SIP calculators hand you a scary number and dip. The actually-useful question is whether you can afford it — here's how to read the gap without spiralling."
 pubDate: 2026-07-10
-author: "Vishakha Patel"
+author: "KitnaSIP Team"
 ---
 
 POV: you type your big-money goal into a SIP calculator. It stares back and goes *"₹42,000/month."* Your actual surplus? ₹35,000. Cool. Cool cool cool. 🙃

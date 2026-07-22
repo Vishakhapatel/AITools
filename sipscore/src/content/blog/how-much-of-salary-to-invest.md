@@ -2,7 +2,7 @@
 title: "How much of your salary should you actually invest each month?"
 description: "The 50-30-20 rule, minus the lecture. A simple way to work out how much of your paycheck should go toward investing — without living like a monk."
 pubDate: 2026-07-13
-author: "Vishakha Patel"
+author: "KitnaSIP Team"
 ---
 
 Your salary hits. For about 48 hours you feel rich. Then rent, EMIs, a suspicious number of Swiggy orders, and *one* impulse buy later… it's gone, and you're back to checking your balance before ordering coffee. ☕ Sound familiar?
