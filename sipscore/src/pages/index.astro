@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { EMAIL_READY, EMAIL_FORM_ID } from '../consts';
 ---
 
 <BaseLayout>
@@ -271,6 +272,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <div id="tradeoff"></div>
         <div id="catCard"></div>
         <div id="affiliateWrap"></div>
+        {EMAIL_READY && (
+          <div class="email-optin" id="emailWrap" hidden>
+            <h3>Want more of this?</h3>
+            <p>Occasional, honest money guides — no spam, unsubscribe anytime.</p>
+            <div class="ml-embedded" data-form={EMAIL_FORM_ID}></div>
+          </div>
+        )}
         <div class="card">
           <div class="assumptions" id="assumptions"></div>
         </div>

@@ -165,6 +165,7 @@ function calculate(rOverride = null) {
   renderTradeoff();
   renderCategories();
   renderAffiliate();
+  renderEmailOptin();
   renderAssumptions();
   showStep(4);
 }
@@ -605,6 +606,15 @@ function renderAffiliate() {
       ${btn}
       <p class="disclosure">${AFFILIATE.note}</p>
     </div>`;
+}
+
+// 7b ── email opt-in (MailerLite). The embed div itself lives statically in
+// index.astro (so MailerLite's own script finds and initialises it on page
+// load, the officially supported pattern) — here we just reveal it once a
+// result exists.
+function renderEmailOptin() {
+  const wrap = $('emailWrap');
+  if (wrap) wrap.hidden = false;
 }
 
 // 8 ── assumptions footer
