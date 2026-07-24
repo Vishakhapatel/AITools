@@ -244,6 +244,34 @@ input[type='range']::-moz-range-thumb { width: 22px; height: 22px; border-radius
 .email-optin .ml-embedded { max-width: 420px; margin-inline: auto; }
 .email-optin .ml-embedded iframe { width: 100% !important; border: 0 !important; }
 
+/* MailerLite's own embedded form ships its own heading/text and a plain
+   light-mode look. We already show our own heading/subtext in .email-optin,
+   so hide MailerLite's (avoids a duplicated/garbled second heading) and
+   reskin the input + button to match the site instead of overriding them.
+   NOTE: #mlb2-44098466 is this specific form's generated container id —
+   if the form is ever deleted and rebuilt in MailerLite, this id changes
+   and these selectors need updating to match the new one. */
+.email-optin #mlb2-44098466.ml-form-embedContainer .ml-form-embedWrapper { background: transparent !important; }
+.email-optin #mlb2-44098466.ml-form-embedContainer .ml-form-embedBody { padding: 0 !important; }
+.email-optin #mlb2-44098466.ml-form-embedContainer .ml-form-embedContent { display: none !important; }
+/* Full ancestor chain repeated here to match (not just equal but exceed)
+   MailerLite's own !important rules on these same properties — a shorter
+   chain loses to their longer one even with !important on both sides. */
+.email-optin #mlb2-44098466.ml-form-embedContainer .ml-form-embedWrapper .ml-form-embedBody .ml-form-fieldRow input {
+  background-color: var(--bg-input) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border) !important;
+}
+.email-optin #mlb2-44098466.ml-form-embedContainer .ml-form-embedWrapper .ml-form-embedBody .ml-form-fieldRow input::placeholder { color: var(--text-tertiary) !important; }
+.email-optin #mlb2-44098466.ml-form-embedContainer .ml-form-embedWrapper .ml-form-embedBody .ml-form-embedSubmit button {
+  background-color: var(--accent) !important;
+  color: var(--bg-dark) !important;
+  font-family: 'Poppins', sans-serif !important;
+}
+.email-optin #mlb2-44098466.ml-form-embedContainer .ml-form-embedWrapper .ml-form-embedBody .ml-form-embedSubmit button:hover { background-color: var(--accent-bright) !important; }
+.email-optin #mlb2-44098466.ml-form-embedContainer .ml-form-successContent h4,
+.email-optin #mlb2-44098466.ml-form-embedContainer .ml-form-successContent p { color: var(--text-primary) !important; }
+
 /* ── Ad slot placeholder ── */
 .ad-slot { max-width: 728px; margin: 2rem auto; min-height: 90px; display: flex; align-items: center; justify-content: center; border: 1px dashed var(--border-light); border-radius: 8px; color: var(--text-tertiary); font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 0.05em; }
 
