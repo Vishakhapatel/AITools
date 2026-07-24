@@ -48,6 +48,14 @@ export const AUTHOR = {
   photo: '/author.svg',
 };
 
+// ── Email capture (MailerLite) ──
+// Account script goes in <head> site-wide (like GA). The embedded form itself
+// (EMAIL_FORM_ID below) renders inside the result page — set once you've built
+// the form in MailerLite and copied its data-form id from the embed snippet.
+export const MAILERLITE_ACCOUNT_ID = '2531194';
+export const EMAIL_FORM_ID = ''; // TODO: paste the embedded form's data-form id
+export const EMAIL_READY = EMAIL_FORM_ID !== '';
+
 // Primary navigation.
 export const NAV = [
   { label: 'Calculator', href: '/#tool' },
